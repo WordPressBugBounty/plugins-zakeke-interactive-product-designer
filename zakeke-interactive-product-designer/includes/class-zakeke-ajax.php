@@ -181,7 +181,7 @@ class Zakeke_AJAX {
 
 		if ( 'yes' !== $hide_price ) {
 			$zakeke_price   = 0.0;
-			$original_price = (float) wc_get_price_to_display( $product, array( 'qty' => $qty ) );
+			$original_price = $product->get_price() * $qty;
 
 			if ( isset( $_REQUEST['zakeke-percent-price'] ) ) {
 				$zakeke_percent_price = (float) sanitize_text_field( wp_unslash( $_REQUEST['zakeke-percent-price'] ) );
@@ -206,13 +206,13 @@ class Zakeke_AJAX {
 				}
 			}
 
-			$zakeke_final_price = (float) zakeke_wc_get_price_to_display( $product, array( 'price' => $zakeke_price ) );
+			$zakeke_final_price = $zakeke_price;
 		}
 
 		wp_send_json( array(
 			'is_purchasable'      => $product->is_purchasable(),
 			'is_in_stock'         => $product->is_in_stock(),
-			'price_including_tax' => $original_price + $zakeke_final_price
+			'price_including_tax' => (float) zakeke_wc_get_price_to_display( $product, array( 'price' => $original_price + $zakeke_final_price ) )
 		) );
 	}
 
@@ -270,9 +270,7 @@ class Zakeke_AJAX {
 
 			if ( isset( $_REQUEST['zakeke_price'] ) ) {
 				$zakeke_price = (float) sanitize_text_field( wp_unslash( $_REQUEST['zakeke_price'] ) );
-				if ( $zakeke_price > 0.0 ) {
-					$zakeke_final_price = (float) wc_get_price_to_display( $product, array( 'price' => $zakeke_price ) );
-				}
+				$zakeke_final_price = (float) wc_get_price_to_display( $product, array( 'price' => $zakeke_price ) );
 			}
 		}
 

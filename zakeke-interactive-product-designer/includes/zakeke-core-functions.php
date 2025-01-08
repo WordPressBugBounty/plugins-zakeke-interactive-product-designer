@@ -5,6 +5,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Check whether the product is customizable without applying any additional filter on the result.
+ *
+ * @param int $product_id
+ *
+ * @return bool Whether the product is customizable.
+ */
+function zakeke_internal_is_customizable( $product_id ) {
+	$zakeke_enabled = get_post_meta( $product_id, 'zakeke_enabled', 'no' );
+
+	return 'yes' === $zakeke_enabled;
+}
+
+/**
  * Check whether the product is customizable.
  *
  * @param int $product_id
@@ -12,7 +25,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool Whether the product is customizable.
  */
 function zakeke_is_customizable( $product_id ) {
-	$zakeke_enabled = get_post_meta( $product_id, 'zakeke_enabled', 'no' );
+	$zakeke_enabled = zakeke_internal_is_customizable( $product_id );
+
+	return apply_filters( 'zakeke_is_customizable', $zakeke_enabled, $product_id );
+}
+
+/**
+ * Check whether the product is configurable without applying additional filters.
+ *
+ * @param int $product_id
+ *
+ * @return bool Whether the product is configurable.
+ */
+function zakeke_internal_configurator_is_customizable( $product_id ) {
+	$zakeke_enabled = get_post_meta( $product_id, 'zakeke_configurator_enabled', 'no' );
 
 	return 'yes' === $zakeke_enabled;
 }
@@ -25,9 +51,9 @@ function zakeke_is_customizable( $product_id ) {
  * @return bool Whether the product is configurable.
  */
 function zakeke_configurator_is_customizable( $product_id ) {
-	$zakeke_enabled = get_post_meta( $product_id, 'zakeke_configurator_enabled', 'no' );
+	$zakeke_enabled = zakeke_internal_configurator_is_customizable( $product_id );
 
-	return 'yes' === $zakeke_enabled;
+	return apply_filters( 'zakeke_configurator_is_customizable', $zakeke_enabled, $product_id );
 }
 
 /**
@@ -125,7 +151,7 @@ function zakeke_customizer_url( $request_params, $mobile, $product = null, $temp
 		'currency'        => get_woocommerce_currency(),
 		'taxPricesPolicy' => $tax_policy,
 		'culture'         => str_replace( '_', '-', $culture ),
-		'modelCode'       => (string) $product->get_id(),
+		'modelCode'       => (string) apply_filters( 'zakeke_iframe_modelCode', $product->get_id() ),
 		'ecommerce'       => 'woocommerce',
 		'attribute'       => array(),
 		'mv'              => 1,

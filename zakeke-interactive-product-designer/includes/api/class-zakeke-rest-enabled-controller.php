@@ -135,7 +135,9 @@ class Zakeke_REST_Enabled_Controller extends WC_REST_Controller {
 
 		if ( empty( $request['environment'] ) || 'customizer' === $request['environment'] ) {
 			update_post_meta( $product_id, 'zakeke_enabled', 'yes' );
+			update_post_meta( $product_id, 'zakeke_configurator_enabled', 'no' );
 		} else {
+			update_post_meta( $product_id, 'zakeke_enabled', 'no' );
 			update_post_meta( $product_id, 'zakeke_configurator_enabled', 'yes' );
 		}
 

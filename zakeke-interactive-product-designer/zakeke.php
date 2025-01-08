@@ -3,11 +3,11 @@
  * Plugin Name: Zakeke Interactive Product Designer
  * Plugin URI: https://www.zakeke.com/
  * Description: Innovative platform to let your customers to customize products in your e-store. Multi-language, mult-currency, 3D view and print-ready outputs.
- * Version: 3.8.14
+ * Version: 4.0.0
  * Author: Zakeke
  * Author URI: https://www.zakeke.com
  * Requires at least: 5.0
- * Tested up to: 6.6
+ * Tested up to: 6.7
  * WC requires at least: 4.0
  * WC tested up to: 9.4
  *
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Zakeke' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.8.14';
+		public $version = '4.0.0';
 
 		/**
 		 * Zakeke api instance.
@@ -214,6 +214,9 @@ if ( ! class_exists( 'Zakeke' ) ) :
 			include_once  'includes/support/class-dynamic-pricing-and-discounts-for-woocommerce.php' ;
 			include_once  'includes/support/class-checkout-for-woocommerce.php' ;
 			include_once  'includes/support/class-tier-pricing-table-premium.php' ;
+			include_once  'includes/support/class-wpml.php' ;
+			include_once  'includes/support/wf-invoice-support.php' ;
+			include_once  'includes/support/class-aelia-currency.php' ;
 		}
 
 		/**

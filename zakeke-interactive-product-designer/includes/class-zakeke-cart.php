@@ -22,6 +22,8 @@ class Zakeke_Cart {
 		add_action( 'woocommerce_checkout_init', array( __CLASS__, 'checkout_init' ) );
 		add_action( 'woocommerce_after_cart_item_name', array( __CLASS__, 'after_cart_item_name' ), 20, 2 );
 		add_action( 'woocommerce_after_cart_item_name', array( __CLASS__, 'after_cart_item_previews' ), 21, 2 );
+		add_filter( 'woocommerce_update_cart_validation', array( __CLASS__, 'update_cart_validation' ), 10, 4 );
+		add_action( 'woocommerce_store_api_validate_cart_item', array( __CLASS__, 'store_api_validate_cart_item' ), 10, 2 );
 	}
 
 	public static $last_modifier = 0;
@@ -151,6 +153,16 @@ class Zakeke_Cart {
 
 			$original_final_excl_tax_price = (float) wc_get_price_excluding_tax( $product );
 
+			$min_quantity = null;
+			if (isset($zakeke_cart_data->min_quantity)) {
+				$min_quantity = $zakeke_cart_data->min_quantity;
+			}
+
+			$quantity_step = null;
+			if (isset($zakeke_cart_data->quantity_step)) {
+				$quantity_step = $zakeke_cart_data->quantity_step;
+			}
+
 			$cart_item_meta['zakeke_data'] = array(
 				'design'                        => $design,
 				'previews'                      => $zakeke_cart_data->previews,
@@ -159,7 +171,9 @@ class Zakeke_Cart {
 				'price_tax'                     => $zakeke_tax_price,
 				'price_excl_tax'                => $zakeke_excl_tax_price,
 				'original_final_price'          => $original_price,
-				'original_final_excl_tax_price' => $original_final_excl_tax_price
+				'original_final_excl_tax_price' => $original_final_excl_tax_price,
+				'min_quantity'                  => $min_quantity,
+				'quantity_step'                 => $quantity_step
 			);
 		} elseif ( self::is_zakeke_configurator_product() ) {
 			$webservice = new Zakeke_Webservice();
@@ -197,6 +211,16 @@ class Zakeke_Cart {
 				$additional_properties = $_REQUEST['zakeke_additional_properties'];
 			}
 
+			$min_quantity = null;
+			if (isset($zakeke_cart_data->min_quantity)) {
+				$min_quantity = $zakeke_cart_data->min_quantity;
+			}
+
+			$quantity_step = null;
+			if (isset($zakeke_cart_data->quantity_step)) {
+				$quantity_step = $zakeke_cart_data->quantity_step;
+			}
+
 			$cart_item_meta['zakeke_configurator_data'] = array(
 				'composition'                   => $zakeke_configuration,
 				'design'                        => $zakeke_cart_data['designID'],
@@ -207,7 +231,9 @@ class Zakeke_Cart {
 				'original_final_price'          => $original_price,
 				'original_final_excl_tax_price' => $original_final_excl_tax_price,
 				'items'                         => wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT ),
-				'additional_properties'         => $additional_properties
+				'additional_properties'         => $additional_properties,
+				'min_quantity'                  => $min_quantity,
+				'quantity_step'                 => $quantity_step
 			);
 		}
 
@@ -476,7 +502,7 @@ class Zakeke_Cart {
 			if ( !isset($cart->cart_contents[ $cart_item_key ]) ) {
 				continue;
 			}
-			
+
 			if ( isset( $values['zakeke_data'] ) ) {
 				$zakeke_data = $values['zakeke_data'];
 
@@ -647,6 +673,69 @@ class Zakeke_Cart {
 			esc_url( $zakeke_edit_link ),
 			esc_html__( 'Edit', 'woocommerce' )
 		);
+	}
+
+	public static function update_cart_validation($passed_validation, $cart_item_key, $values, $quantity) {
+		if ($passed_validation && isset($values['zakeke_data'])) {
+			$zakeke_data = $values['zakeke_data'];
+
+			$min_quantity = null;
+			if ( isset( $zakeke_data['min_quantity'] ) ) {
+				$min_quantity = $zakeke_data['min_quantity'];
+			}
+
+			$quantity_step = null;
+			if ( isset( $zakeke_data['quantity_step'] ) ) {
+				$quantity_step = $zakeke_data['quantity_step'];
+			}
+
+			if ($min_quantity !== null && $quantity < $min_quantity) {
+				wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
+				$passed_validation = false;
+			}
+
+			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
+				wc_add_notice( sprintf( __( 'You can only add this item in multiples of %d.', 'zakeke' ), $quantity_step ), 'error' );
+				$passed_validation = false;
+			}
+		}
+
+		return $passed_validation;
+	}
+
+	/**
+	 * Validate the cart, for the new WooCommerce block based cart only
+	 *
+	 * @param WC_Product $product
+	 * @param array $cart_item
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public static function store_api_validate_cart_item($product, $cart_item) {
+		if (isset($cart_item['zakeke_data']) && isset($cart_item['quantity'])) {
+			$quantity = $cart_item['quantity'];
+
+			$zakeke_data = $cart_item['zakeke_data'];
+
+			$min_quantity = null;
+			if ( isset( $zakeke_data['min_quantity'] ) ) {
+				$min_quantity = $zakeke_data['min_quantity'];
+			}
+
+			$quantity_step = null;
+			if ( isset( $zakeke_data['quantity_step'] ) ) {
+				$quantity_step = $zakeke_data['quantity_step'];
+			}
+
+			if ($min_quantity !== null && $quantity < $min_quantity) {
+				throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
+			}
+
+			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
+				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
+			}
+		}
 	}
 }
 

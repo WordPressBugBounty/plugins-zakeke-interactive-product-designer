@@ -1,6 +1,13 @@
 Changelog
 =========
 
+#### 4.0.0 - Jan 23, 2024
+
+**Summary**
+
+Expanded support for WPML, support for Aelia currency switcher
+
+
 #### 3.8.0 - Jan 23, 2024
 
 **Summary**

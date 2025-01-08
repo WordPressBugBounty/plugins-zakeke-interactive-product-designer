@@ -151,6 +151,16 @@ class Zakeke_Multiplevariants {
 
 		$original_final_excl_tax_price = (float) wc_get_price_excluding_tax( $product );
 
+		$min_quantity = null;
+		if (isset($zakeke_cart_data->min_quantity)) {
+			$min_quantity = $zakeke_cart_data->min_quantity;
+		}
+
+		$quantity_step = null;
+		if (isset($zakeke_cart_data->quantity_step)) {
+			$quantity_step = $zakeke_cart_data->quantity_step;
+		}
+
 		return array(
 			'zakeke_data' => array(
 				'design'                        => $design,
@@ -160,7 +170,9 @@ class Zakeke_Multiplevariants {
 				'price_tax'                     => $zakeke_tax_price,
 				'price_excl_tax'                => $zakeke_excl_tax_price,
 				'original_final_price'          => $original_price,
-				'original_final_excl_tax_price' => $original_final_excl_tax_price
+				'original_final_excl_tax_price' => $original_final_excl_tax_price,
+				'min_quantity'                  => $min_quantity,
+				'quantity_step'                 => $quantity_step
 			)
 		);
 	}
@@ -175,7 +187,7 @@ class Zakeke_Multiplevariants {
 			return;
 		}
 
-		$zakeke_selections = json_decode( sanitize_text_field( wp_unslash( ( $_REQUEST['zakeke_selections'] ) ) ), true );
+		$zakeke_selections = json_decode( wp_unslash( ( $_REQUEST['zakeke_selections'] ) ), true );
 
 		if ( ! is_array( $zakeke_selections ) ) {
 			return;

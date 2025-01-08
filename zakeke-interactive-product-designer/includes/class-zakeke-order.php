@@ -36,9 +36,9 @@ class Zakeke_Order {
 	 */
 	public static function create_order_line_item_object( $line_item, $cart_item_key, $values, $order) {
 		if (isset($values['zakeke_data'])) {
-			$line_item->zakeke_data = $values['zakeke_data'];
+            $line_item["zakeke_data"] = $values['zakeke_data'];
 		} elseif (isset($values['zakeke_configurator_data'])) {
-			$line_item->zakeke_configurator_data = $values['zakeke_configurator_data'];
+            $line_item["zakeke_configurator_data"] = $values['zakeke_configurator_data'];
 		}
 
 		return $line_item;
@@ -53,16 +53,16 @@ class Zakeke_Order {
 	 * @throws Exception
 	 */
 	public static function new_order_item( $item_id, $item, $order_id) {
-		if (isset($item->zakeke_data)) {
-			wc_add_order_item_meta($item_id, 'zakeke_data', $item->zakeke_data);
-		} elseif (isset($item->zakeke_configurator_data)) {
+		if (isset($item["zakeke_data"])) {
+			wc_add_order_item_meta($item_id, 'zakeke_data', $item["zakeke_data"]);
+		} elseif (isset($item["zakeke_configurator_data"])) {
 			$zakeke_configurator_data = array(
-				'composition' => $item->zakeke_configurator_data['composition'],
-				'preview'     => $item->zakeke_configurator_data['preview']
+				'composition' => $item["zakeke_configurator_data"]['composition'],
+				'preview'     => $item["zakeke_configurator_data"]['preview']
 			);
 
-			if (isset($item->zakeke_configurator_data['additional_properties'])) {
-				$zakeke_configurator_data['additional_properties'] = $item->zakeke_configurator_data['additional_properties'];
+			if (isset($item["zakeke_configurator_data"]['additional_properties'])) {
+				$zakeke_configurator_data['additional_properties'] = $item["zakeke_configurator_data"]['additional_properties'];
 			}
 
 			wc_add_order_item_meta( $item_id, 'zakeke_configurator_data', $zakeke_configurator_data );
@@ -166,21 +166,20 @@ class Zakeke_Order {
 
 			$zakeke_data = $item->get_meta('zakeke_data');
 			if ($zakeke_data) {
-				$maybe_discounted_price             = max(0, $item->get_total() + $item->get_total_tax());
-				$maybe_discounted_price_without_tax = max(0, $item->get_total());
-
 				$quantity = max(1, absint($item->get_quantity()));
 
-				if ($maybe_discounted_price) {
-					$maybe_discounted_price = $maybe_discounted_price / $quantity;
+				$retailPrice = max(0, $item->get_total() + $item->get_total_tax());
+				if ($retailPrice > 0) {
+					$retailPrice = $retailPrice / $quantity;
 				}
 
-				if ($maybe_discounted_price_without_tax) {
-					$maybe_discounted_price_without_tax = $maybe_discounted_price_without_tax / $quantity;
-				}
+                $order_item_total = max(0, $item->get_total());
+                $order_item_total = apply_filters( 'zakeke_order_item_total', $order_item_total, $item );
 
-				$modelUnitPrice = min($maybe_discounted_price_without_tax, $zakeke_data['original_final_excl_tax_price']);
-				$retailPrice    = min($maybe_discounted_price, $zakeke_data['original_final_price'] + $zakeke_data['price']);
+				$modelUnitPrice = 0;
+				if ($order_item_total > 0) {
+					$modelUnitPrice = $order_item_total / $quantity;
+				}
 
 				$item_data = array(
 					'designDocID' => $zakeke_data['design'],
@@ -188,7 +187,7 @@ class Zakeke_Order {
 					'sku' => is_object($product) ? $product->get_sku() : null,
 					'variantCode' => strval($item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id()),
 					'quantity' => $quantity,
-					'designUnitPrice' => $zakeke_data['price_excl_tax'],
+					'designUnitPrice' => 0,
 					'modelUnitPrice' => $modelUnitPrice,
 					'retailPrice' => $retailPrice
 				);
@@ -202,19 +201,21 @@ class Zakeke_Order {
 
 			$zakeke_data = $item->get_meta('zakeke_configurator_data');
 			if ($zakeke_data) {
-				$maybe_discounted_price_without_tax = $order->get_line_total( $item, false, false );
+				$order_item_total = $order->get_line_total( $item, false, false );
+				$order_item_total = apply_filters( 'zakeke_order_item_total', $order_item_total, $item );
 
 				$quantity = max(1, absint($item->get_quantity()));
 
-				if ($maybe_discounted_price_without_tax) {
-					$maybe_discounted_price_without_tax = $maybe_discounted_price_without_tax / $quantity;
-				}
+                $unitPrice = 0;
+                if ($order_item_total > 0) {
+                    $unitPrice = $order_item_total / $quantity;
+                }
 
 				$item_data = array(
 					'composition' => $zakeke_data['composition'],
 					'orderDetailCode' => $order_item_id,
 					'quantity' => $quantity,
-					'unitPrice' => $maybe_discounted_price_without_tax
+					'unitPrice' => $unitPrice
 				);
 
 				$data['compositionDetails'][] = $item_data;
@@ -296,13 +297,21 @@ class Zakeke_Order {
 					continue;
 				}
 
+				$value = $meta->value;
+				if (is_string($value)) {
+					$value = unserialize($value);
+					if (false === $value) {
+						continue;
+					}
+				}
+
 				$formatted_meta[$meta->id] = (object) array(
 					'key' => $meta->key,
 					'value' => array(
-						'design' => $meta->value['design']
+						'design' => $value['design']
 					),
 					'display_key' => $meta->key,
-					'display_value' => $meta->value['design']
+					'display_value' => $value['design']
 				);
 			}
 		}

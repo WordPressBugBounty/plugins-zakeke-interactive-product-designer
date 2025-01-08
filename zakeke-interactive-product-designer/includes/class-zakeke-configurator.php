@@ -22,7 +22,7 @@ class Zakeke_Configurator {
 
 		remove_action( 'wp_loaded', array( 'WC_Form_Handler', 'add_to_cart_action' ), 20 );
 
-		add_filter( 'template_include', array( __CLASS__, 'template_loader' ), 20000 );
+		add_filter( 'template_include', array( __CLASS__, 'template_loader' ), 20000000 );
 	}
 
 	private static function should_show_configurator() {
@@ -169,6 +169,9 @@ class Zakeke_Configurator {
 			$product            = wc_get_product();
 			if ($product !== false) {
 				$atts['product_id'] = $product->get_id();
+			} elseif (isset($_REQUEST['ztmp_prefix_add-to-cart'])) {
+				$atts['product_id'] = sanitize_text_field( wp_unslash( $_REQUEST['ztmp_prefix_add-to-cart'] ) );
+				$product = wc_get_product( $atts['product_id'] );
 			}
 		}
 
@@ -179,6 +182,8 @@ class Zakeke_Configurator {
 		$atts['modelCode'] = $atts['product_id'];
 
 		$atts['modelCode'] = apply_filters('ffs_zakeke_model_code', $atts['modelCode'], $atts['product_id']);
+
+		$atts['modelCode'] = apply_filters('zakeke_configurator_iframe_modelCode', $atts['modelCode']);
 
 		self::enqueue_scripts();
 
