@@ -260,7 +260,7 @@ class Zakeke_Webservice {
 		$auth = zakeke_get_auth();
 		$auth->set_access_type( $auth::AUTH_TYPE_S2S );
 		$data = array(
-			'quantity' => $qty
+			'qty' => $qty
 		);
 
 		$resource = '/v1/compositions/' . $configuration . '/cartinfo';

@@ -3,7 +3,7 @@
  * Plugin Name: Zakeke Interactive Product Designer
  * Plugin URI: https://www.zakeke.com/
  * Description: Innovative platform to let your customers to customize products in your e-store. Multi-language, mult-currency, 3D view and print-ready outputs.
- * Version: 4.0.1
+ * Version: 4.0.2
  * Author: Zakeke
  * Author URI: https://www.zakeke.com
  * Requires at least: 5.0
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Zakeke' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.0.1';
+		public $version = '4.0.2';
 
 		/**
 		 * Zakeke api instance.
@@ -296,7 +296,7 @@ if ( ! class_exists( 'Zakeke' ) ) :
 				$row_meta = array(
 					'docs' => '<a href="https://zakeke.zendesk.com/hc/en-us/sections/360004488294-WooCommerce-" target="_blank" aria-label="' . esc_attr__( 'View Zakeke documentation',
 							'zakeke' ) . '">' . esc_html__( 'Documentation', 'zakeke' ) . '</a>',
-					'register' => '<a href="https://portal.zakeke.com/Admin/Register?utm_medium=plugin&utm_campaign=zakeke_processo_installazione" target="_blank" aria-label="' . esc_attr__( 'Register to Zakeke',
+					'register' => '<a href="https://admin.zakeke.com/Admin/Register?utm_medium=plugin&utm_campaign=zakeke_processo_installazione" target="_blank" aria-label="' . esc_attr__( 'Register to Zakeke',
 							'zakeke' ) . '">' . esc_html__( 'Register to Zakeke to use the plugin', 'zakeke' ) . '</a>'
 				);
 

@@ -249,18 +249,18 @@ class Zakeke_Order {
                         <div>
                             <?php array_shift($zakeke_data['previews']); ?>
                             <?php foreach ($zakeke_data['previews'] as $preview): ?>
-                                <img style="display:inline" src="<?php echo esc_url($preview->url); ?>" width="150"/>
+                                <img style="display:inline" src="<?php echo esc_url($preview->url); ?>" width="150" />
                             <?php endforeach; ?>
                         </div>
 					<?php elseif (count($zakeke_data['previews']) >= 3) : ?>
 						<div>
-							<img style="display:inline" src="<?php echo esc_url($zakeke_data['previews'][1]->url); ?>" width="150"/>
-							<img style="display:inline" src="<?php echo esc_url($zakeke_data['previews'][2]->url); ?>" width="150"/>
+							<img style="display:inline" src="<?php echo esc_url($zakeke_data['previews'][1]->url); ?>" width="150" />
+							<img style="display:inline" src="<?php echo esc_url($zakeke_data['previews'][2]->url); ?>" width="150" />
 						</div>
 					<?php elseif (count($zakeke_data['previews']) >= 2) : ?>
-						<img src="<?php echo esc_url($zakeke_data['previews'][1]->url); ?>" width="150"/>
+						<img src="<?php echo esc_url($zakeke_data['previews'][1]->url); ?>" width="150" />
 					<?php else : ?>
-						<img src="<?php echo esc_url($zakeke_data['previews'][0]->url); ?>"/>
+						<img src="<?php echo esc_url($zakeke_data['previews'][0]->url); ?>" width="150" />
 					<?php endif ?>
 				</li>
 				<?php if ($zakeke_data['price_tax'] > 0.0 && 'yes' === $integration->show_price_in_cart ) : ?>
@@ -275,7 +275,7 @@ class Zakeke_Order {
 				?>
 				<ul class="wc-item-meta">
 					<li>
-						<img src="<?php echo esc_url($zakeke_data['preview']); ?>" />
+						<img src="<?php echo esc_url($zakeke_data['preview']); ?>" width="150" />
 					</li>
 				</ul>
 				<?php
