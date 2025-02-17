@@ -29,7 +29,7 @@ class Zakeke_Admin_Order {
 
 	public static function add_order_item_meta( $item_id, $item, $order ) {
 		$zakeke_data = $item->get_meta( 'zakeke_data' );
-		if ( ! $zakeke_data || !$zakeke_data['design'] ) {
+		if ( !$zakeke_data || is_string($zakeke_data) || !isset($zakeke_data['design']) ) {
 			return;
 		}
 
