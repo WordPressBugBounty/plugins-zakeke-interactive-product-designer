@@ -96,7 +96,7 @@ class Zakeke_Admin_Get_Started {
 	 * @return string
 	 */
 	private static function get_zakeke_start_url() {
-		return ZAKEKE_BASE_URL . '/Admin/E-Commerce/WooCommerce/Start?storeUrl=' . urlencode(trailingslashit(get_site_url()));
+		return ZAKEKE_ADMIN_URL . '/Admin/E-Commerce/WooCommerce/Start?storeUrl=' . urlencode(trailingslashit(get_site_url()));
 	}
 
 	private static function render_connect() {

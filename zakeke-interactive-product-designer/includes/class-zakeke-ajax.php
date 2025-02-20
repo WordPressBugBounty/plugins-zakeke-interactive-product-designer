@@ -292,7 +292,7 @@ class Zakeke_AJAX {
 
 		$path     = sanitize_text_field( wp_unslash( $_REQUEST['path'] ) );
 		$response = zakeke_retry( function () use ( $path ) {
-			$response = wp_remote_request( ZAKEKE_BASE_URL . '/SharedPreview' . $path );
+			$response = wp_remote_request( ZAKEKE_ADMIN_URL . '/SharedPreview' . $path );
 			if ( is_wp_error( $response ) ) {
 				throw new Exception( 'Zakeke_AJAX::share ' . $path );
 			} elseif ( is_array( $response )

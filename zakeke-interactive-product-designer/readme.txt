@@ -2,24 +2,24 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
 
 == Description ==
 
-**Enhance Your Customer Experience**: Allow customers to preview their fully customized products before purchase.
+**Wow your visitors**: customers can see their fully customized product before buying
 
-**Streamline Your Process**: Obtain approved, ready-to-print files for all custom orders with ease.
+**Less back and forth**: get an approved, ready-for-print file for all your custom order
 
-**Boost Your Profits**: Charge a percentage or a fixed rate for each customization to increase your margins.
+**Increase your margins**: charge a percentage or a fixed rate for each customization
 
-**Drive Your Sales**: Offer customers exactly what they want to grow your sales.
+**Grow your sales**: give your customers the exact product they are looking for
 
-**Engage Your Visitors**: Real-time 3D product previews provide an immersive experience, keeping visitors on your site longer.
+**More time on your site**: real-time 3D product previews give visitors an immersive experience
 
-[youtube https://www.youtube.com/watch?v=mqCLlefz1b0]
+[youtube https://www.youtube.com/watch?v=BlRxWexFnw0]
 
 
 ### **See the app in action**
@@ -68,15 +68,15 @@ Start a free trial today and see how these customizations look in your store:
 
 -   **Own images**: customers can upload their own images and use them to create uniquely personal products.
 
--   **Pre-designed Templates**: A powerful tool to create templates with editable texts and images for your products.
+-   **Premium Photos**: customers can access over 140 million high-quality images and artworks made available by talented professionals from all over the world.
 
--   **Virtual Try-On**: allow visitors to try-on products before they buy, increasing add-to-cart rate and reduce returns.
+-   **Product variations**: allow visitors to change colors, sizes and styles to match exactly what they want.
 
--   **3D Digital Asset Management**: create, store and share 3D models, collaborate on assets with your team, request models quotes and generate videos and Gifs
+-   **Realtime 3D view**: customers will see 3D models of their customized products that they can zoom in on, rotate and move around.
 
 -   **Augmented Reality**: use AR to show your visitors a 3D replica of their product in their own house.
 
--   **3D Product Configurator**: customers can build their own versions of your products in 3D choosing components, changing elements, and customizing colors and materials.
+-   **Product Configurator**: customers can build their own versions of your products choosing components, changing elements, and customizing colors and materials.
 
 
 ### Customer Support that’s always ready to help
@@ -85,7 +85,7 @@ Our friendly team will assist you from implementation to launch. We typically re
 
 ### Additional Sales Channels & Stores
 
-Connect and manage extra commerce channels and stores to your Zakeke account. Sales channels are the different platforms where you sell your products
+Connect and manage extra commerce channels and stores to your Zakeke account. Sales channels are the different platforms where you sell your products 
 
 ### Works on any print-on-demand product
 
@@ -149,17 +149,17 @@ Ever had a customer complain about their personalized product not looking like t
 
 -   Posters
 
-Zakeke is a web service that integrates with your [WooCommerce] store. You can test Zakeke for free for 14 days and then upgrade for as low as [$19.90/month]. A small transaction fee may apply. Learn more about our pricing plans: [https://admin.zakeke.com/en-US/pricing](https://admin.zakeke.com/en-US/pricing)
+Zakeke is a web service that integrates with your WooCommerce store. You can test Zakeke for free for 14 days and then upgrade for as low as $29.90/month. A small transaction fee may apply. Learn more about our pricing plans: [https://www.zakeke.com/pricing/?woocommerce](https://www.zakeke.com/pricing/?woocommerce)
 
 ## Testimonials
 
 ★★★★
-TKR Graphics
-This app is by far the best customizer for your website, not only is it the best looking that we have used, but the support you receive from the developers is second to none, always quick to respond and want to hear any ideas you have for the future of the app's development, my kind of people, keep up the fantastic work guys!
+JAPAN GIFTS
+We love this app… Very easy to use… and you can setup your products quickly. Customer service is very fast to respond, always within 24 hours or less. And I’m sure they will even improve the app even further. We have used many Customizer apps in the past and like this one best because the look is very professional, and the service is outstanding…
 
 ★★★★
-PRINTED DREAM
-Have been using this app for a while and I gotta say, I'm blow away! Two points that really stuck out: 1. The incredible versatility of the tools provided. The options are limitless, you can pretty much achieve everything you need in terms of customized products. 2. The support team is absolutely amazing. The reply fast, take their time with the answers & help you so long, until your problem is solved. Amazing experience so far, way better than every other app for customization, I can wholeheartedly recommend Zakeke!
+ARTMARS
+Best One! This product designer plugin is cleary the best one: simple and clean. I had a display problem with my theme on mobile devices, and the dev team solved it really fast. All the best for you guys.
 
 ★★★★
 MY CANS
@@ -176,6 +176,7 @@ We searched high and low for a customize product plugin that worked well on both
 ★★★★
 STATUS MUGS
 Very pleased with this app highly recommend it great customer service and the software is absolutely fantastic for what we need.
+
 
 
 ★★★★
