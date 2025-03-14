@@ -1,12 +1,17 @@
 Changelog
 =========
 
+#### 4.1.0 - March 14, 2025
+
+**Summary**
+
+Show the customized thumbnail on the block based WC cart
+
 #### 4.0.0 - Jan 23, 2024
 
 **Summary**
 
 Expanded support for WPML, support for Aelia currency switcher
-
 
 #### 3.8.0 - Jan 23, 2024
 

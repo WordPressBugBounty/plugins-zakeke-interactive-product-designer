@@ -102,85 +102,85 @@ class Zakeke_Admin_Get_Started {
 	private static function render_connect() {
 		$issues = self::get_issues();
 		?>
-		<div class="wrap" style="max-width: 1200px;margin-top: 20px">
+        <div class="wrap" style="max-width: 1200px;margin-top: 20px">
 
-			<div style="background-color: #fff;border-left: 4px solid #405761;padding: 45px 20px 20px 30px;position: relative;overflow: hidden;">
-				<div class="text">
-					<img style="width:180px;"
-						 src="<?php echo esc_url(get_zakeke()->plugin_url() . '/assets/images/zakeke_logo.png'); ?>">
+            <div style="background-color: #fff;border-left: 4px solid #405761;padding: 45px 20px 20px 30px;position: relative;overflow: hidden;">
+                <div class="text">
+                    <img style="width:180px;"
+                         src="<?php echo esc_url(get_zakeke()->plugin_url() . '/assets/images/zakeke_logo.png'); ?>">
 
-					<h2 style="font-size: 24px;line-height: 29px;position: relative;">
+                    <h2 style="font-size: 24px;line-height: 29px;position: relative;">
 						<?php esc_html_e('Connect to Zakeke', 'zakeke'); ?>
-					</h2>
-					<p style="font-size: 16px;margin-bottom: 30px;position: relative;">
-						You're almost done! Just 2 more steps to have your WooCommerce store connected to Zakeke.
-					</p>
+                    </h2>
+                    <p style="font-size: 16px;margin-bottom: 30px;position: relative;">
+                        You're almost done! Just 2 more steps to have your WooCommerce store connected to Zakeke.
+                    </p>
 
 					<?php if (!empty($issues)) { ?>
-						<h3><?php esc_html_e('To connect your store to Zakeke, fix the following issues:', 'zakeke'); ?></h3>
-						<div style="background: #fff; border-left: 4px solid #dc3232; padding: 1px 12px; margin: 10px 0 20px 0; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); line-height: 1.5;">
-							<ul>
+                        <h3><?php esc_html_e('To connect your store to Zakeke, fix the following issues:', 'zakeke'); ?></h3>
+                        <div style="background: #fff; border-left: 4px solid #dc3232; padding: 1px 12px; margin: 10px 0 20px 0; box-shadow: 0 1px 1px 0 rgba(0,0,0,.1); line-height: 1.5;">
+                            <ul>
 								<?php
 								foreach ($issues as $issue) {
 									echo '<li>' . wp_kses_post($issue) . '</li>';
 								}
 								?>
-							</ul>
-						</div>
+                            </ul>
+                        </div>
 
-						<p><a
-									class="button button-primary"
-									style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
-									href="#"
-									onclick="window.location.reload(); return false;">
+                        <p><a
+                                    class="button button-primary"
+                                    style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
+                                    href="#"
+                                    onclick="window.location.reload(); return false;">
 								<?php esc_html_e('Check again', 'zakeke'); ?>
-							</a></p>
+                            </a></p>
 					<?php } ?>
 
 
-					<p><a
-								class="button button-primary"
-								style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
-								href="<?php echo esc_url(self::get_zakeke_start_url()); ?>"
-							<?php 
+                    <p><a
+                                class="button button-primary"
+                                style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
+                                href="<?php echo esc_url(self::get_zakeke_start_url()); ?>"
+							<?php
 							if (!empty($issues)) {
 								echo ' disabled onclick="alert(\'Please fix the reported issues first\'); return false;" ';
-							} 
+							}
 							?>
-							>
+                        >
 							<?php esc_html_e('Connect', 'zakeke'); ?>
-						</a></p>
-				</div>
-			</div>
-		</div>
+                        </a></p>
+                </div>
+            </div>
+        </div>
 		<?php
 	}
 
 	private static function render_all_green() {
 		?>
-		<div class="wrap" style="max-width: 1200px;margin-top: 20px">
-			<div style="background-color: #fff;border-left: 4px solid #405761;padding: 45px 20px 20px 30px;position: relative;overflow: hidden;">
-				<div class="text">
-					<img style="width:180px;"
-						 src="<?php echo esc_url(get_zakeke()->plugin_url() . '/assets/images/zakeke_logo.png'); ?>">
+        <div class="wrap" style="max-width: 1200px;margin-top: 20px">
+            <div style="background-color: #fff;border-left: 4px solid #405761;padding: 45px 20px 20px 30px;position: relative;overflow: hidden;">
+                <div class="text">
+                    <img style="width:180px;"
+                         src="<?php echo esc_url(get_zakeke()->plugin_url() . '/assets/images/zakeke_logo.png'); ?>">
 
-					<h2 style="font-size: 24px;line-height: 29px;position: relative;">
+                    <h2 style="font-size: 24px;line-height: 29px;position: relative;">
 						<?php esc_html_e('Configure your Zakeke account', 'zakeke'); ?>
-					</h2>
-					<p style="font-size: 16px;margin-bottom: 30px;position: relative;">
-						Go to your Zakeke admin to configure your products and all the settings of the designer.
-					</p>
+                    </h2>
+                    <p style="font-size: 16px;margin-bottom: 30px;position: relative;">
+                        Go to your Zakeke admin to configure your products and all the settings of the designer.
+                    </p>
 
-					<p
-					><a
-								class="button button-primary"
-								style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
-								href="https://admin.zakeke.com/Admin/Dashboard">
+                    <p
+                    ><a
+                                class="button button-primary"
+                                style="background-color: #405761;border-width: 0;box-shadow: none;border-radius: 3px;color: #fff;height: auto;padding: 3px 14px;text-align: center;white-space: normal !important;height: 37px;line-height: 37px;min-width: 124px;padding: 0 13px;text-shadow: none;"
+                                href="https://admin.zakeke.com/Admin/Dashboard">
 							<?php esc_html_e('Go to your Zakeke admin', 'zakeke'); ?>
-						</a></p>
-				</div>
-			</div>
-		</div>
+                        </a></p>
+                </div>
+            </div>
+        </div>
 		<?php
 	}
 
@@ -191,7 +191,7 @@ class Zakeke_Admin_Get_Started {
 		$integration = new Zakeke_Integration();
 
 		if (( strlen($integration->get_option('username')) === 0 && strlen($integration->get_option('username')) === 0 )
-			&& ( strlen($integration->get_option('client_id')) === 0 && strlen($integration->get_option('secret_key')) === 0 )) {
+		    && ( strlen($integration->get_option('client_id')) === 0 && strlen($integration->get_option('secret_key')) === 0 )) {
 			self::render_connect();
 		} else {
 			self::render_all_green();

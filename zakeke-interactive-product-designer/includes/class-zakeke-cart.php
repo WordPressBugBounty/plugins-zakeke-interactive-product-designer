@@ -24,6 +24,7 @@ class Zakeke_Cart {
 		add_action( 'woocommerce_after_cart_item_name', array( __CLASS__, 'after_cart_item_previews' ), 21, 2 );
 		add_filter( 'woocommerce_update_cart_validation', array( __CLASS__, 'update_cart_validation' ), 10, 4 );
 		add_action( 'woocommerce_store_api_validate_cart_item', array( __CLASS__, 'store_api_validate_cart_item' ), 10, 2 );
+		add_filter( 'woocommerce_store_api_cart_item_images', array( __CLASS__, 'store_api_cart_item_images' ), 10, 3 );
 	}
 
 	public static $last_modifier = 0;
@@ -736,6 +737,50 @@ class Zakeke_Cart {
 				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
 			}
 		}
+	}
+
+	/**
+	 * Update product thumbnail in the cart
+	 *
+	 * @param array $product_images
+	 * @param array $cart_item
+	 * @param string $cart_item_key
+	 *
+	 * @return array
+	 */
+	public static function store_api_cart_item_images($product_images, $cart_item, $cart_item_key) {
+		$preview = null;
+
+		if (isset($cart_item['zakeke_data'])) {
+			$zakeke_data = $cart_item['zakeke_data'];
+			$previews    = $zakeke_data['previews'];
+
+			if ( $previews ) {
+				$preview = $previews[0]->url;
+			}
+		} elseif ( isset( $cart_item['zakeke_configurator_data'] ) ) {
+			$zakeke_data = $cart_item['zakeke_configurator_data'];
+			$preview     = $zakeke_data['preview'];
+		}
+
+		if ( $preview ) {
+			$integration = new Zakeke_Integration();
+			if ( 'no' !== $integration->show_custom_thumbnail ) {
+				return [
+					(object)[
+						'id'        => (int) 0,
+						'src'       => $preview,
+						'thumbnail' => $preview,
+						'srcset'    => (string)'',
+						'sizes'     => (string)'',
+						'name'      => '',
+						'alt'       => '',
+					]
+				];
+			}
+		}
+
+		return $product_images;
 	}
 }
 
