@@ -389,6 +389,18 @@ function zakekeDesigner(config) {
 		}
 		const customizerUrl   = isLarge ? config.customizerLargeUrl : config.customizerSmallUrl;
 		getZakekeIframe().src = setAuth(customizerUrl, auth);
+
+		if (!isLarge) {
+			try {
+				const viewport = document.querySelector('meta[name="viewport"]');
+				if (viewport) {
+					viewport.content = 'width=device-width, initial-scale=1, interactive-widget=resizes-content';
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		}
+
 	}).catch(() => window.history.back());
 }
 
