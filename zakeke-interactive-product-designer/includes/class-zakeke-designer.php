@@ -94,11 +94,15 @@ class Zakeke_Designer {
 			$atts = array();
 		}
 
-		if ( ! isset( $atts['product_id'] ) ) {
-			return '<-- Zakeke: product_id parameter not set --!>';
+		if ( isset( $atts['product_id'] ) ) {
+			$product = wc_get_product( intval( $atts['product_id'] ) );
+		} else {
+			$product = wc_get_product();
+			if ($product !== false) {
+				$atts['product_id'] = $product->get_id();
+			}
 		}
 
-		$product = wc_get_product( intval( $atts['product_id'] ) );
 		if ( ! $product ) {
 			return '<-- Zakeke: product not found --!>';
 		}

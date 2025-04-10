@@ -2,7 +2,7 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 4.1.1
+Stable tag: 4.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
