@@ -61,7 +61,7 @@ class Zakeke_ProductPage {
 
 	public static function add_zakeke_class( $args, $product ) {
 		if ( zakeke_is_customizable( $product->get_id() ) || zakeke_configurator_is_customizable( $product->get_id() ) ) {
-			$classes = ' product-type-zakeke';
+			$classes = ' product-type-zakeke ';
 			if ( isset( $args['class'] ) ) {
 				$classes .= $args['class'];
 			}
