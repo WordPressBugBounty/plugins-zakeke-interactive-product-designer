@@ -2,7 +2,7 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 4.1.4
+Stable tag: 4.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
@@ -19,7 +19,7 @@ Let your buyers customize and view their personalized product before purchasing.
 
 **More time on your site**: real-time 3D product previews give visitors an immersive experience
 
-[youtube https://www.youtube.com/watch?v=BlRxWexFnw0]
+[youtube https://www.youtube.com/watch?v=q-FD0VP6MDY&feature=youtu.be]
 
 
 ### **See the app in action**
