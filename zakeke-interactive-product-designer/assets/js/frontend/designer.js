@@ -33,7 +33,7 @@ function zakekeDesigner(config) {
 
 				product.variants = product.variants.map(v =>
 					v.map(o => {
-						if (o.Value.Id === '' && o.Id.startsWith('pa_')) {
+						if (o.Value.Id === '') {
 							return product.attributes.find(a => a.id === o.Id).values.map(v => ({
 								Id: o.Id,
 								Value: {

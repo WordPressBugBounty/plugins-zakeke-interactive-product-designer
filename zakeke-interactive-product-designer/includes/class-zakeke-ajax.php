@@ -69,16 +69,17 @@ class Zakeke_AJAX {
 
 		$attributes = array();
 		$variations = array();
-
 		if ( $product->is_type( 'variable' ) ) {
 			foreach ( $product->get_variation_attributes() as $key => $values ) {
-				if ( false === strpos( $key, 'pa_' ) ) {
-					continue;
-				}
-
 				$attribute_values = array();
+				$attribute_id = '';
 
 				if ( taxonomy_exists( $key ) ) {
+					// Handle global attributes (taxonomy-based) - use URL encoding
+					$attribute_id = preg_replace_callback( '/%[0-9A-F]{2}/', function ( array $matches ) {
+						return strtolower( $matches[0] );
+					}, rawurlencode( $key ) );
+
 					$terms = wc_get_product_terms(
 						$product->get_id(),
 						$key,
@@ -95,12 +96,22 @@ class Zakeke_AJAX {
 							);
 						}
 					}
+				} else {
+					// Handle non-global attributes (custom product attributes) - use sanitize_title
+					$attribute_id = sanitize_title( $key );
+
+					foreach ( $values as $value ) {
+						if ( ! empty( $value ) ) {
+							$attribute_values[] = array(
+								'id'    => $value,
+								'label' => apply_filters( 'woocommerce_variation_option_name', $value, null, $key, $product )
+							);
+						}
+					}
 				}
 
 				$attributes[] = array(
-					'id'     => preg_replace_callback( '/%[0-9A-F]{2}/', function ( array $matches ) {
-						return strtolower( $matches[0] );
-					}, rawurlencode( $key ) ),
+					'id'     => $attribute_id,
 					'label'  => wc_attribute_label( $key, $product ),
 					'values' => $attribute_values
 				);
