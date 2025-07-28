@@ -2,180 +2,226 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 4.1.7
+Stable tag: 4.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
 
 == Description ==
 
-**Wow your visitors**: customers can see their fully customized product before buying
 
-**Less back and forth**: get an approved, ready-for-print file for all your custom order
+Transform your store with **unique, immersive product experiences** with Zakeke Customizer, 3D Product Configurator, 3D DAM & AR Viewer, and Virtual Try-On.
+Let customers personalize products in real time, view them in realistic 3D, and experience them with AR and virtual try-on.
+Customers design, you receive **production-ready files automatically**. Cut back-and-forth on custom orders, streamline intake, and easily connect to your favorite POD to save time and simplify fulfilment.
+**What you'll get**:
+-   Personalization options for any product: text, image, color, engravings & more
+-   3D Configurator for made-to-order products with components, textures & more
+-   Create, store, manage and share hyper-realistic 3D models without a 3D artist
+-   AI-driven virtual try-on from any device, no app download required
+-   Production-ready files auto-generated - no manual edits or back-and-forth
 
-**Increase your margins**: charge a percentage or a fixed rate for each customization
 
-**Grow your sales**: give your customers the exact product they are looking for
+[youtube https://www.youtube.com/watch?v=q-FD0VP6MDY]
 
-**More time on your site**: real-time 3D product previews give visitors an immersive experience
 
-[youtube https://www.youtube.com/watch?v=BlRxWexFnw0]
 
 
 ### **See the app in action**
 [Try a live demo in our test store](https://store.zakeke.com/?stage=customizer&utm_source=Live+demo&utm_medium=WP+Mktplace)
 
-## Customers design — and buy! — personalized products from your store
 
-You’ve heard about product customization. It’s the store owner dream come true! But when you try and launch it for your store, those dreams come crashing down:
+## Customers design — and buy! — personalized products from your store, without the hassle on your end
+You’ve heard about product customization. More sales, happier customers, less stress. But when you try to launch it, the chaos begins:
+Endless emails and revisions just to get one order right
+Customers send files that aren’t print-ready — and expect you to fix them in Photoshop
+Shoppers complain because what they got isn’t what they saw
 
--   Hundreds of emails with customization requests flood your inbox
-
--   People send files that are not ready for print
-
--   Customers get frustrated when products don’t look how they wanted
-
-
-Instead of ka-ching! the only thing you hear is ka-boom! as your store implodes before you even get to launch it.
-
+Instead of “ka-ching!” the only thing you hear is “ka-boom!”. It’s back-and-forth and file wrangling.
 Unless you try Zakeke Interactive Product Designer for WooCommerce.
 
 
 ### Zakeke Interactive Product Designer makes product personalization easy
 
+
 Just follow these steps:
+
 
 1.  Install Zakeke Interactive Product Designer in your store
 
+
 2.  Create your inventory of customizable products
 
+
 3.  Publish your products live
+
 
 4.  Get happy customers buying from you… and coming back for more
 
 
-Zakeke Interactive Product Designer lets customers personalize any product (clothing, promotional gifts, paper products, shoes, jewelry, watches) and visualize how they’ll look before checking out.
 
-You’ll never have to prepare proofs again or hear back from angry customers complaining “this isn’t what it’s supposed to look like”. Customers always know what they are going to get before buying, which means fewer refunds, fewer complaints, and more 5-star ratings.
+Zakeke Interactive Product Designer lets customers personalize any product — clothing, promotional gifts, paper goods, shoes, jewelry, watches — and visualize exactly how it’ll look before checkout.
+You’ll never have to prepare proofs again or deal with angry customers saying, “this isn’t what it’s supposed to look like.” Customers always know what they’re getting before they buy — which means fewer refunds, fewer complaints, and more 5-star reviews.
+It’s built to eliminate manual work, **generate print-ready files automatically, and deliver a WYSIWYG (What You See Is What You Get) experience they can trust**.
+
+
+
 
 ### Features
 
+
 Start a free trial today and see how these customizations look in your store:
 
--   **Text customization**: customers can add text to your products, change its color, size, orientation, rotation and choose their favorite fonts.
-
--   **Clipart and images**: upload a catalog of pre-selected artwork for clients to pick and create new designs in minutes.
-
--   **Own images**: customers can upload their own images and use them to create uniquely personal products.
-
--   **Premium Photos**: customers can access over 140 million high-quality images and artworks made available by talented professionals from all over the world.
-
--   **Product variations**: allow visitors to change colors, sizes and styles to match exactly what they want.
-
--   **Realtime 3D view**: customers will see 3D models of their customized products that they can zoom in on, rotate and move around.
-
--   **Augmented Reality**: use AR to show your visitors a 3D replica of their product in their own house.
-
--   **Product Configurator**: customers can build their own versions of your products choosing components, changing elements, and customizing colors and materials.
+**Text customization**: customers can add and edit text to your products in real time — changing font, color, size, orientation, rotation, and even curving text to personalize freely.
 
 
-### Customer Support that’s always ready to help
+**Clipart, own images & premium photos**: customers can use preloaded artwork, upload their own images, or choose from over 140 million high-quality visuals from top creators to design unique products.
 
-Our friendly team will assist you from implementation to launch. We typically reply to all questions in the same day.
 
-### Additional Sales Channels & Stores
+**3D Product Configurator**: customers can build their own versions of your products by selecting parts, changing components, styles, and customizing materials and colors.
 
-Connect and manage extra commerce channels and stores to your Zakeke account. Sales channels are the different platforms where you sell your products 
 
-### Works on any print-on-demand product
+**AI-Powered Configuration Generator**: let customers describe what they want and generate personalized product versions using AI — via text or voice.
 
-Simply define what area of your product you want to allow customizations for and that’s it.
 
-### Get more sales from mobile devices
+**Realtime 3D view**: show an interactive 3D model of the customized product that customers can zoom in on, rotate, and explore in real time.
 
-The customizer interface works smoothly on any device and screen size.
 
-### Full control of your pricing
+**Augmented Reality**: let customers view a 3D replica of your products in their own space using AR.
 
-You decide exactly how much you want to charge for each customization. Increase your average purchase value and your margins.
+**Virtual Try-On**: allow customers to virtually try on their dream products on any device before buying — no app required.
 
-### Ready-to-ship orders
 
-Each order comes with the right files, every single time. No more fussing with clients sending files that won’t print properly. Simply get the files and go to print.
+**Quote request**: customers can send you a request for a quote containing all the configuration and product data you need.
 
-### Personalized products that match what your buyers want
 
-Ever had a customer complain about their personalized product not looking like they wanted to? With Zakeke this won’t happen again. Visitors create their products in 3D and you get a clear list of options to fulfil and ship their products, exactly as they imagined them.
+**3D Digital Asset Manager**: manage, store, share, and collaborate on your 3D assets in one centralized cloud-based platform with unlimited storage.
+
+
+**Production-ready files for any method**: auto-generate PDF, PNG, SVG, DXF, and engraving files — with realistic previews and advanced formats like stacked or nested, no manual design work needed.
+
+
+**Full control of your pricing**: set fixed or percentage-based fees for each customization or configuration to increase your margins and AOV.
+
+
+**Works on any print-on-demand product**: simply define which product areas are customizable and you're ready to go.
+
+
+**Mobile ready**: the customizer interface is fully responsive and provides a smooth personalization experience across all screen sizes.
+
+
+**Global ready**: Zakeke supports over 50 currencies and automatically adapts to your store’s language.
+
+**Additional Sales Channels & Stores**: connect and manage multiple e-commerce channels and stores from your Zakeke account — all in one place.
+
+
+**WYSIWYG experience (What You See Is What You Get)**: customers always see exactly what they’ll get before buying — reducing complaints, refunds, and surprises.
+
+
+**Customer Support that’s always ready to help**: our friendly team is available from implementation to launch, and typically responds to all questions the same day.
+
+**3rd Party Integrations**: Connect tools like OrderDesk, Printful, Zapier, and more to automate and analyze.
+
+
+
+
+
 
 ### Zakeke Interactive Product Designer is perfect for these e-commerce businesses:
 
+
 -   Clothing for Women, Men and Kids
+
 
 -   Shoes
 
+
 -   Swimwear
+
 
 -   Bibs
 
+
 -   Bags
+
 
 -   Jewelry
 
+
 -   Phone cases
+
 
 -   Hats & Caps
 
+
 -   Backpacks
+
 
 -   Pins
 
+
 -   Art & Wall Decor
+
 
 -   Accessories
 
+
 -   Towels
+
 
 -   Blankets
 
+
 -   Mugs
+
 
 -   Pillows & Covers
 
+
 -   Stationery
+
 
 -   Stickers
 
+
 -   Magnets
+
 
 -   Posters
 
+
 Zakeke is a web service that integrates with your WooCommerce store. You can test Zakeke for free for 14 days and then upgrade for as low as $29.90/month. A small transaction fee may apply. Learn more about our pricing plans: [https://www.zakeke.com/pricing/?woocommerce](https://www.zakeke.com/pricing/?woocommerce)
+
 
 ## Testimonials
 
-★★★★
-JAPAN GIFTS
-We love this app… Very easy to use… and you can setup your products quickly. Customer service is very fast to respond, always within 24 hours or less. And I’m sure they will even improve the app even further. We have used many Customizer apps in the past and like this one best because the look is very professional, and the service is outstanding…
 
+★★★★
+LA FABRIQUE A SACHETS
+We began with 100 orders a month, and now we handle 500-600 monthly, thanks to Zakeke. It allows growth without extra staff.
 ★★★★
 ARTMARS
 Best One! This product designer plugin is cleary the best one: simple and clean. I had a display problem with my theme on mobile devices, and the dev team solved it really fast. All the best for you guys.
+
 
 ★★★★
 MY CANS
 We are very happy with the Zakeke product customizer! Everything works smoothly! A fair price / performance ratio. Handling is clear, for both sides, administrators and users. If there are any problems or questions, a great customer support is available and actively supported. We are very satisfied.
 
-★★★★
-PLAYMORE TCG
-I just wanted to give feedback on what an excellent product and service you have provided my business! Zakeke product designer is a miracle and magical!! you have taken so much stress and frustration out from the hassle of using plugins that just don’t work. Most have the processing on the server the plugin is hosted on but having the chance to use a service like this is a major change and certainly a breakthrough for this industry! When I first set it up was easy and super functional. Your team is incredible and I really truly appreciate the quality work you put into this software thanks!
 
+★★★★
+KAZE CLUB
+One of the features I love is the print-ready file output. For companies like ours that rely on sublimation, it’s a game changer, streamlining over 80% of our workflow.
 ★★★★
 ENGRAVOLOGIST LLC
 We searched high and low for a customize product plugin that worked well on both mobile and desktop and THIS IS IT! Most product designers work great on desktop, but really struggle on mobile. The Zakeke product designer on mobile looks just like an app – it’s amazing.
 
+
 ★★★★
-STATUS MUGS
-Very pleased with this app highly recommend it great customer service and the software is absolutely fantastic for what we need.
+DESIGN ITALIAN SHOES
+Zakeke delivers premium 3D visualization, eliminates excess samples, and ensures we produce only what clients design, resulting in 100% sell-out.
+
+
+
 
 
 
@@ -183,12 +229,17 @@ Very pleased with this app highly recommend it great customer service and the so
 YOUR BREW
 The real reason why I’m switching several of my stores over to this? The price. It is priced fairly and in a manner that they want you to grow and succeed. They aren’t just trying to recoup their money, they see a long term investment in your functioning business as the better option than large outlandish fees. Massively impressed with this app, I would recommend anyone who is currently using another personalisation app sets aside an hour to test this out – It’s all you'll need!
 
+
 I genuinely want these guys to become the biggest custom product app because they've done such a good job.
+
+
 
 
 == Installation ==
 
+
 Installation instructions are [available here]([https://zakeke.zendesk.com/hc/en-us/articles/360024308714-Installation-instructions-](https://zakeke.zendesk.com/hc/en-us/articles/360024308714-Installation-instructions-)).
+
 
 == Screenshots ==
 
