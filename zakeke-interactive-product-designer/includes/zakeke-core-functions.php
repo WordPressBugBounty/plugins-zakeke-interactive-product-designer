@@ -76,7 +76,12 @@ function zakeke_has_provider( $product_id ) {
  */
 function zakeke_guest_code() {
 	if ( isset( $_COOKIE['zakeke-guest'] ) ) {
-		return sanitize_text_field(wp_unslash($_COOKIE['zakeke-guest']));
+		$value = sanitize_text_field(wp_unslash($_COOKIE['zakeke-guest']));
+		if ( strlen( $value ) === 32 ) {
+			return $value;
+		} else {
+			return wp_generate_password( 32, false );
+		}
 	}
 
 	$value = wp_generate_password( 32, false );
@@ -527,3 +532,4 @@ function zakeke_wc_get_price_to_display( $product, $args = array() ) {
 			)
 		);
 }
+

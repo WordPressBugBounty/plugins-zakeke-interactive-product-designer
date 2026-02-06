@@ -220,11 +220,16 @@ class Zakeke_AJAX {
 			$zakeke_final_price = $zakeke_price;
 		}
 
-		wp_send_json( array(
+		$response = array(
 			'is_purchasable'      => $product->is_purchasable(),
 			'is_in_stock'         => $product->is_in_stock(),
 			'price_including_tax' => (float) zakeke_wc_get_price_to_display( $product, array( 'price' => $original_price + $zakeke_final_price ) )
-		) );
+		);
+
+		// Apply filter to allow modification of the price endpoint response
+		$response = apply_filters( 'zakeke_get_price_response', $response, $product, $qty );
+
+		wp_send_json( $response );
 	}
 
 	/**

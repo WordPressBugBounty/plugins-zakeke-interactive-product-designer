@@ -22,7 +22,7 @@ while ( have_posts() ) {
 	?>
 
 	<div id="zakeke-container">
-		<iframe src="about:blank" id="zakeke-frame" data-hj-allow-iframe="" allow="clipboard-read; clipboard-write; fullscreen; web-share; accelerometer; magnetometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera *; xr-spatial-tracking;"></iframe>
+		<iframe src="about:blank" id="zakeke-frame" data-hj-allow-iframe="" allow="clipboard-read; clipboard-write; fullscreen; web-share; accelerometer; magnetometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera *; xr-spatial-tracking; microphone;"></iframe>
 		<div id="zakeke-designer-config" data-config="<?php echo _wp_specialchars( zakeke_customizer_config(), ENT_QUOTES, 'UTF-8', true ) ?>"></div>
 	</div>
 
