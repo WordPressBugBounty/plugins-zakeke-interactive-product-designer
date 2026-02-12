@@ -214,6 +214,23 @@ class Zakeke_Webservice {
 
 		$res->pricing = $json['pricing'];
 
+		// Handle quantity-related fields
+		if (isset($json['minQuantity'])) {
+			$res->min_quantity = $json['minQuantity'];
+		}
+		
+		if (isset($json['quantityStep'])) {
+			$res->quantity_step = $json['quantityStep'];
+		}
+		
+		if (isset($json['quantityPackages'])) {
+			$res->quantity_packages = $json['quantityPackages'];
+		}
+
+		if (isset($json['additionalAttributes'])) {
+			$res->additional_attributes = $json['additionalAttributes'];
+		}
+
 		$preview        = new stdClass();
 		$preview->url   = $json['tempPreviewUrl'];
 		$preview->label = '';
@@ -228,6 +245,7 @@ class Zakeke_Webservice {
 				$res->previews[] = $preview;
 			}
 		}
+		
 
 		$cache[$cache_key] = $res;
 		return $res;
@@ -264,7 +282,22 @@ class Zakeke_Webservice {
 		);
 
 		$resource = '/v1/compositions/' . $configuration . '/cartinfo';
-		return self::request( 'GET', $resource, $data, $auth );
+		$result = self::request( 'GET', $resource, $data, $auth );
+		
+		// Handle quantity-related fields for configurator
+		if (isset($result['minQuantity'])) {
+			$result['min_quantity'] = $result['minQuantity'];
+		}
+		
+		if (isset($result['quantityStep'])) {
+			$result['quantity_step'] = $result['quantityStep'];
+		}
+		
+		if (isset($result['quantityPackages'])) {
+			$result['quantity_packages'] = $result['quantityPackages'];
+		}
+		
+		return $result;
 	}
 
 	/**

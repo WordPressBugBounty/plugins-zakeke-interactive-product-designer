@@ -1,6 +1,12 @@
 Changelog
 =========
 
+#### 4.2.0 - February 12, 2026
+
+**Summary**
+
+Add support for upcoming new features in the Zakeke platform.
+
 #### 4.1.0 - March 14, 2025
 
 **Summary**

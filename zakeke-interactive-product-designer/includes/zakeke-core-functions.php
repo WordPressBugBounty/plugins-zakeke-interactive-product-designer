@@ -533,3 +533,25 @@ function zakeke_wc_get_price_to_display( $product, $args = array() ) {
 		);
 }
 
+/**
+ * Get the configurator URL with clientId parameter.
+ *
+ * @param string|null $product_id Optional product ID to add as productCode query parameter.
+ * @return string The configurator URL with clientId query parameter if set.
+ */
+function zakeke_configurator_url( $product_id = null ) {
+	$url = 'https://configurator.zakeke.com/';
+
+	$integration = new Zakeke_Integration();
+	$client_id = $integration->get_option( 'client_id' );
+
+	if ( ! empty( $client_id ) ) {
+		$url = add_query_arg( 'clientId', $client_id, $url );
+		if ( ! empty( $product_id ) ) {
+			$url = add_query_arg( 'productCode', $product_id, $url );
+		}
+	}
+
+	return $url;
+}
+

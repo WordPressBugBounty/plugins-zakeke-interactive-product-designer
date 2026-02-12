@@ -164,6 +164,16 @@ class Zakeke_Cart {
 				$quantity_step = $zakeke_cart_data->quantity_step;
 			}
 
+			$quantity_packages = null;
+			if (isset($zakeke_cart_data->quantity_packages)) {
+				$quantity_packages = $zakeke_cart_data->quantity_packages;
+			}
+
+			$additional_attributes = null;
+			if (isset($zakeke_cart_data->additional_attributes)) {
+				$additional_attributes = $zakeke_cart_data->additional_attributes;
+			}
+
 			$cart_item_meta['zakeke_data'] = array(
 				'design'                        => $design,
 				'previews'                      => $zakeke_cart_data->previews,
@@ -174,7 +184,9 @@ class Zakeke_Cart {
 				'original_final_price'          => $original_price,
 				'original_final_excl_tax_price' => $original_final_excl_tax_price,
 				'min_quantity'                  => $min_quantity,
-				'quantity_step'                 => $quantity_step
+				'quantity_step'                 => $quantity_step,
+				'quantity_packages'             => $quantity_packages,
+				'additional_attributes'         => $additional_attributes
 			);
 		} elseif ( self::is_zakeke_configurator_product() ) {
 			$webservice = new Zakeke_Webservice();
@@ -213,13 +225,18 @@ class Zakeke_Cart {
 			}
 
 			$min_quantity = null;
-			if (isset($zakeke_cart_data->min_quantity)) {
-				$min_quantity = $zakeke_cart_data->min_quantity;
+			if (isset($zakeke_cart_data['min_quantity'])) {
+				$min_quantity = $zakeke_cart_data['min_quantity'];
 			}
 
 			$quantity_step = null;
-			if (isset($zakeke_cart_data->quantity_step)) {
-				$quantity_step = $zakeke_cart_data->quantity_step;
+			if (isset($zakeke_cart_data['quantity_step'])) {
+				$quantity_step = $zakeke_cart_data['quantity_step'];
+			}
+
+			$quantity_packages = null;
+			if (isset($zakeke_cart_data['quantity_packages'])) {
+				$quantity_packages = $zakeke_cart_data['quantity_packages'];
 			}
 
 			$cart_item_meta['zakeke_configurator_data'] = array(
@@ -231,10 +248,11 @@ class Zakeke_Cart {
 				'price_excl_tax'                => $zakeke_excl_tax_price,
 				'original_final_price'          => $original_price,
 				'original_final_excl_tax_price' => $original_final_excl_tax_price,
-				'items'                         => wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT ),
+				'items'                         => wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE ),
 				'additional_properties'         => $additional_properties,
 				'min_quantity'                  => $min_quantity,
-				'quantity_step'                 => $quantity_step
+				'quantity_step'                 => $quantity_step,
+				'quantity_packages'             => $quantity_packages
 			);
 		}
 
@@ -324,6 +342,17 @@ class Zakeke_Cart {
 	public static function item_meta_display( $item_data, $cart_item ) {
 		if ( isset( $cart_item['zakeke_data'] ) ) {
 			$zakeke_data = $cart_item['zakeke_data'];
+
+			if ( isset( $zakeke_data['additional_attributes'] ) && is_array( $zakeke_data['additional_attributes'] ) ) {
+				foreach ( $zakeke_data['additional_attributes'] as $attribute ) {
+					if ( isset( $attribute['name'] ) && isset( $attribute['value'] ) ) {
+						$item_data[] = array(
+							'key'   => wp_kses_post( $attribute['name'] ),
+							'value' => wp_kses_post( $attribute['value'] )
+						);
+					}
+				}
+			}
 
 			if ( $zakeke_data['price_tax'] > 0.0 ) {
 				$integration = new Zakeke_Integration();
@@ -445,7 +474,7 @@ class Zakeke_Cart {
 
 				$cart_item_data['zakeke_configurator_data']['preview'] = $zakeke_cart_data['preview'];
 				$cart_item_data['zakeke_configurator_data']['price']   = $zakeke_cart_data['price'];
-				$cart_item_data['zakeke_configurator_data']['items']   = wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT );
+				$cart_item_data['zakeke_configurator_data']['items']   = wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE );
 
 				$original_price = $zakeke_data['original_final_price'];
 
@@ -561,7 +590,7 @@ class Zakeke_Cart {
 
 				$cart_item_data['zakeke_configurator_data']['preview'] = $zakeke_cart_data['preview'];
 				$cart_item_data['zakeke_configurator_data']['price']   = $zakeke_cart_data['price'];
-				$cart_item_data['zakeke_configurator_data']['items']   = wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT );
+				$cart_item_data['zakeke_configurator_data']['items']   = wp_json_encode( $zakeke_cart_data['items'], JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE );
 
 				$original_price = $zakeke_data['original_final_price'];
 
@@ -677,7 +706,7 @@ class Zakeke_Cart {
 	}
 
 	public static function update_cart_validation($passed_validation, $cart_item_key, $values, $quantity) {
-		if ($passed_validation && isset($values['zakeke_data'])) {
+		if ($passed_validation && isset($values['zakeke_data']) && !isset($values['zakeke_data']['modificationID'])) {
 			$zakeke_data = $values['zakeke_data'];
 
 			$min_quantity = null;
@@ -697,6 +726,53 @@ class Zakeke_Cart {
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
 				wc_add_notice( sprintf( __( 'You can only add this item in multiples of %d.', 'zakeke' ), $quantity_step ), 'error' );
+				$passed_validation = false;
+			}
+
+			$quantity_packages = null;
+			if ( isset( $zakeke_data['quantity_packages'] ) ) {
+				$quantity_packages = $zakeke_data['quantity_packages'];
+			}
+
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+				$allowed_quantities = implode( ', ', $quantity_packages );
+				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
+				$passed_validation = false;
+			}
+		}
+
+		// Also validate configurator products
+		if ($passed_validation && isset($values['zakeke_configurator_data'])) {
+			$zakeke_data = $values['zakeke_configurator_data'];
+
+			$min_quantity = null;
+			if ( isset( $zakeke_data['min_quantity'] ) ) {
+				$min_quantity = $zakeke_data['min_quantity'];
+			}
+
+			$quantity_step = null;
+			if ( isset( $zakeke_data['quantity_step'] ) ) {
+				$quantity_step = $zakeke_data['quantity_step'];
+			}
+
+			if ($min_quantity !== null && $quantity < $min_quantity) {
+				wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
+				$passed_validation = false;
+			}
+
+			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
+				wc_add_notice( sprintf( __( 'You can only add this item in multiples of %d.', 'zakeke' ), $quantity_step ), 'error' );
+				$passed_validation = false;
+			}
+
+			$quantity_packages = null;
+			if ( isset( $zakeke_data['quantity_packages'] ) ) {
+				$quantity_packages = $zakeke_data['quantity_packages'];
+			}
+
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+				$allowed_quantities = implode( ', ', $quantity_packages );
+				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
 				$passed_validation = false;
 			}
 		}
@@ -735,6 +811,51 @@ class Zakeke_Cart {
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
 				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
+			}
+
+			$quantity_packages = null;
+			if ( isset( $zakeke_data['quantity_packages'] ) ) {
+				$quantity_packages = $zakeke_data['quantity_packages'];
+			}
+
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+				$allowed_quantities = implode( ', ', $quantity_packages );
+				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
+			}
+		}
+
+		// Also validate configurator products
+		if (isset($cart_item['zakeke_configurator_data']) && isset($cart_item['quantity'])) {
+			$quantity = $cart_item['quantity'];
+
+			$zakeke_data = $cart_item['zakeke_configurator_data'];
+
+			$min_quantity = null;
+			if ( isset( $zakeke_data['min_quantity'] ) ) {
+				$min_quantity = $zakeke_data['min_quantity'];
+			}
+
+			$quantity_step = null;
+			if ( isset( $zakeke_data['quantity_step'] ) ) {
+				$quantity_step = $zakeke_data['quantity_step'];
+			}
+
+			if ($min_quantity !== null && $quantity < $min_quantity) {
+				throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
+			}
+
+			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
+				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
+			}
+
+			$quantity_packages = null;
+			if ( isset( $zakeke_data['quantity_packages'] ) ) {
+				$quantity_packages = $zakeke_data['quantity_packages'];
+			}
+
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+				$allowed_quantities = implode( ', ', $quantity_packages );
+				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
 			}
 		}
 	}

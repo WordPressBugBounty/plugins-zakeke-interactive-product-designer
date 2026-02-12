@@ -22,7 +22,7 @@ if (!isset($final_atts)) {
 ?>
 <div id="zakeke-configurator-container">
 	<iframe id="zakeke-configurator-frame"
-			src="<?php echo esc_url(apply_filters('zakeke_configurator_url', 'https://configurator.zakeke.com/')); ?>"
+			src="<?php echo esc_url( apply_filters( 'zakeke_configurator_url', zakeke_configurator_url( $final_atts['modelCode'] ) ) ); ?>"
 			data-hj-allow-iframe="" allow="clipboard-read; clipboard-write; fullscreen; web-share; accelerometer; magnetometer; autoplay; encrypted-media; gyroscope; picture-in-picture; camera *; xr-spatial-tracking; microphone;"></iframe>
 	<script type="application/javascript">
 		window.zakekeConfiguratorConfig = <?php echo json_encode($final_atts); ?>;

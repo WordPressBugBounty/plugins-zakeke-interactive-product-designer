@@ -29,7 +29,7 @@ class Zakeke_Namenumbers {
 		}
 
 		if ( isset( $_REQUEST[ $attribute_key ] ) ) {
-			return sanitize_text_field( wp_unslash( $_REQUEST[ $attribute_key ] ) );
+			return wp_unslash( $_REQUEST[ $attribute_key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		return false;
@@ -168,6 +168,16 @@ class Zakeke_Namenumbers {
 			$quantity_step = $zakeke_cart_data->quantity_step;
 		}
 
+		$quantity_packages = null;
+		if (isset($zakeke_cart_data->quantity_packages)) {
+			$quantity_packages = $zakeke_cart_data->quantity_packages;
+		}
+
+		$additional_attributes = null;
+		if (isset($zakeke_cart_data->additional_attributes)) {
+			$additional_attributes = $zakeke_cart_data->additional_attributes;
+		}
+
 		return array(
 			'zakeke_data' => array(
 				'design'                        => $design,
@@ -180,7 +190,9 @@ class Zakeke_Namenumbers {
 				'original_final_price'          => $original_price,
 				'original_final_excl_tax_price' => $original_final_excl_tax_price,
 				'min_quantity'                  => $min_quantity,
-				'quantity_step'                 => $quantity_step
+				'quantity_step'                 => $quantity_step,
+				'quantity_packages'             => $quantity_packages,
+				'additional_attributes'         => $additional_attributes,
 			)
 		);
 	}

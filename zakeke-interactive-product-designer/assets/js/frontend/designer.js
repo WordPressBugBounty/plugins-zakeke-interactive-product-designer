@@ -203,7 +203,7 @@ function zakekeDesigner(config) {
 		form.appendChild(input);
 	}
 
-	function addToCart(color, design) {
+	function addToCart(color, design, quantity) {
 		let params = updatedParams(color, {
 			'zdesign': design
 		});
@@ -213,6 +213,10 @@ function zakekeDesigner(config) {
 
 		if (config.from_shortcode) {
 			params['zakeke_return_url'] = config.wc_cart_url;
+		}
+
+		if (quantity) {
+			params['quantity'] = quantity;
 		}
 
 		if (window.zakekeAddToCart) {
@@ -320,7 +324,7 @@ function zakekeDesigner(config) {
 			if (config.params.zdesign_edit) {
 				updateCart();
 			} else {
-				addToCart(event.data.colorId, event.data.designId);
+				addToCart(event.data.colorId, event.data.designId, event.data.quantity);
 			}
 		} else if (event.data.zakekeMessageType === 1) {
 			let zakekeOptions = {};

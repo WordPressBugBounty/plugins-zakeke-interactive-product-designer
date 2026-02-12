@@ -357,6 +357,8 @@ class Zakeke_AJAX {
 
 			$cart_item_data['zakeke_data']['previews'] = $zakeke_cart_data->previews;
 
+			$cart_item_data['zakeke_data']['additional_attributes'] = $zakeke_cart_data->additional_attributes;
+
 			if ( 'yes' !== $integration->hide_price ) {
 				$cart_item_data['zakeke_data']['pricing'] = $zakeke_cart_data->pricing;
 

@@ -23,6 +23,9 @@ class Zakeke_Order {
 		add_filter('woocommerce_order_item_get_formatted_meta_data', array(__CLASS__, 'api_order_item_get_formatted_meta_data'), 10, 2);
 
 		add_filter('woocommerce_order_again_cart_item_data', array(__CLASS__, 'order_again_cart_item_data'), 10, 3);
+
+		// Add checkout validation for Zakeke products
+		add_action('woocommerce_check_cart_items', array(__CLASS__, 'validate_checkout_quantities'));
 	}
 
 	/**
@@ -70,6 +73,22 @@ class Zakeke_Order {
 	}
 
 	public static function order_item_get_formatted_meta_data( $formatted_meta, $order_item ) {
+		// Handle zakeke_data additional_attributes
+		$zakeke_data = $order_item->get_meta( 'zakeke_data' );
+		if ( $zakeke_data && isset( $zakeke_data['additional_attributes'] ) && is_array( $zakeke_data['additional_attributes'] ) ) {
+			foreach ( $zakeke_data['additional_attributes'] as $index => $attribute ) {
+				if ( isset( $attribute['name'] ) && isset( $attribute['value'] ) ) {
+					$formatted_meta['zakeke_attr_' . $index] = (object) array(
+						'key'           => $attribute['name'],
+						'value'         => $attribute['value'],
+						'display_key'   => wp_kses_post( $attribute['name'] ),
+						'display_value' => wp_kses_post( $attribute['value'] ),
+					);
+				}
+			}
+		}
+
+		// Handle zakeke_configurator_data
 		$zakeke_data = $order_item->get_meta( 'zakeke_configurator_data' );
 		if ( $zakeke_data ) {
 			$webservice = new Zakeke_Webservice();
@@ -196,6 +215,10 @@ class Zakeke_Order {
 	                $item_data['designModificationID'] = $zakeke_data['modificationID'];
                 }
 
+                if (isset($zakeke_data['quantity_packages'])) {
+	                $item_data['quantityPackages'] = $zakeke_data['quantity_packages'];
+                }
+
 				$data['details'][] = $item_data;
 			}
 
@@ -217,6 +240,10 @@ class Zakeke_Order {
 					'quantity' => $quantity,
 					'unitPrice' => $unitPrice
 				);
+
+                if (isset($zakeke_data['quantity_packages'])) {
+	                $item_data['quantityPackages'] = $zakeke_data['quantity_packages'];
+                }
 
 				$data['compositionDetails'][] = $item_data;
 			}
@@ -340,6 +367,105 @@ class Zakeke_Order {
 		}
 
 		return $cart_item_data;
+	}
+
+	/**
+	 * Validate Zakeke product quantities at checkout
+	 * Groups cart items by modificationID and validates total quantities against minimum requirements
+	 */
+	public static function validate_checkout_quantities() {
+		if (!WC()->cart) {
+			return;
+		}
+
+		// Group cart items by modificationID
+		$modification_groups = array();
+
+		foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
+			// Only process items that have zakeke_data with modificationID
+			if (isset($cart_item['zakeke_data']) && isset($cart_item['zakeke_data']['modificationID'])) {
+				$zakeke_data = $cart_item['zakeke_data'];
+				$modification_id = $zakeke_data['modificationID'];
+				$quantity = $cart_item['quantity'];
+
+				// Initialize group if not exists
+				if (!isset($modification_groups[$modification_id])) {
+					$modification_groups[$modification_id] = array(
+						'total_quantity' => 0,
+						'min_quantity' => null,
+						'quantity_step' => null,
+						'quantity_packages' => null,
+						'product_name' => isset($cart_item['data']) ? $cart_item['data']->get_name() : __('Product', 'zakeke'),
+						'zakeke_data' => $zakeke_data
+					);
+				}
+
+				// Add quantity to the group total
+				$modification_groups[$modification_id]['total_quantity'] += $quantity;
+
+				// Set min_quantity and quantity_step if available (use from any item in the group)
+				if (isset($zakeke_data['min_quantity']) && $modification_groups[$modification_id]['min_quantity'] === null) {
+					$modification_groups[$modification_id]['min_quantity'] = $zakeke_data['min_quantity'];
+				}
+
+				if (isset($zakeke_data['quantity_step']) && $modification_groups[$modification_id]['quantity_step'] === null) {
+					$modification_groups[$modification_id]['quantity_step'] = $zakeke_data['quantity_step'];
+				}
+
+				if (isset($zakeke_data['quantity_packages']) && $modification_groups[$modification_id]['quantity_packages'] === null) {
+					$modification_groups[$modification_id]['quantity_packages'] = $zakeke_data['quantity_packages'];
+				}
+			}
+		}
+
+		// Validate each modification group
+		foreach ($modification_groups as $modification_id => $group) {
+			$total_quantity = $group['total_quantity'];
+			$min_quantity = $group['min_quantity'];
+			$quantity_step = $group['quantity_step'];
+			$quantity_packages = $group['quantity_packages'];
+			$product_name = $group['product_name'];
+
+			// Check minimum quantity requirement
+			if ($min_quantity !== null && $total_quantity < $min_quantity) {
+				wc_add_notice( 
+					sprintf( 
+						__( '%s (Modification ID: %s): You need to have at least %d of this item in total.', 'zakeke' ), 
+						$product_name,
+						$modification_id,
+						$min_quantity 
+					), 
+					'error' 
+				);
+			}
+
+			// Check quantity step requirement
+			if ($quantity_step !== null && $total_quantity % $quantity_step !== 0) {
+				wc_add_notice( 
+					sprintf( 
+						__( '%s (Modification ID: %s): Total quantity must be in multiples of %d.', 'zakeke' ), 
+						$product_name,
+						$modification_id,
+						$quantity_step 
+					), 
+					'error' 
+				);
+			}
+
+			// Check quantity packages requirement
+			if ($quantity_packages !== null && is_array($quantity_packages) && !in_array($total_quantity, $quantity_packages, true)) {
+				$allowed_quantities = implode(', ', $quantity_packages);
+				wc_add_notice( 
+					sprintf( 
+						__( '%s (Modification ID: %s): Total quantity can only be one of these values: %s.', 'zakeke' ), 
+						$product_name,
+						$modification_id,
+						$allowed_quantities 
+					), 
+					'error' 
+				);
+			}
+		}
 	}
 }
 
