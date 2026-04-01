@@ -2,10 +2,11 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
+
 
 == Description ==
 
@@ -13,12 +14,16 @@ Let your buyers customize and view their personalized product before purchasing.
 Transform your store with **unique, immersive product experiences** with Zakeke Customizer, 3D Product Configurator, 3D DAM & AR Viewer, and Virtual Try-On.
 Let customers personalize products in real time, view them in realistic 3D, and experience them with AR and virtual try-on.
 Customers design, you receive **production-ready files automatically**. Cut back-and-forth on custom orders, streamline intake, and easily connect to your favorite POD to save time and simplify fulfilment.
-**What you'll get**:
+And more: create product visuals at scale with AI, from still life to ads and video, starting from a single product photo. 
+Start in hours, not weeks.
+**What you'll get**: 
 -   Personalization options for any product: text, image, color, engravings & more
 -   3D Configurator for made-to-order products with components, textures & more
 -   Create, store, manage and share hyper-realistic 3D models without a 3D artist
 -   AI-driven virtual try-on from any device, no app download required
--   Production-ready files auto-generated - no manual edits or back-and-forth
+-   Production-ready files auto-generated - no manual edits or back-and-forth 
+
+-   AI-generated product visuals at scale, starting from a single photo, just with prompts
 
 
 [youtube https://www.youtube.com/watch?v=q-FD0VP6MDY]
@@ -90,6 +95,8 @@ Start a free trial today and see how these customizations look in your store:
 
 **Virtual Try-On**: allow customers to virtually try on their dream products on any device before buying — no app required.
 
+**AI Agent Studio**: your creative team inside Zakeke. Generate product visuals at scale from a single image — with prompts, in just seconds.
+
 
 **Quote request**: customers can send you a request for a quote containing all the configuration and product data you need.
 
@@ -119,7 +126,7 @@ Start a free trial today and see how these customizations look in your store:
 
 **Customer Support that’s always ready to help**: our friendly team is available from implementation to launch, and typically responds to all questions the same day.
 
-**3rd Party Integrations**: Connect tools like OrderDesk, Printful, Zapier, and more to automate and analyze.
+**3rd Party Integrations**: Connect tools like OrderDesk, Printful, Zapier, and more to automate and analyze. 
 
 
 
@@ -231,7 +238,6 @@ The real reason why I’m switching several of my stores over to this? The price
 
 
 I genuinely want these guys to become the biggest custom product app because they've done such a good job.
-
 
 
 
