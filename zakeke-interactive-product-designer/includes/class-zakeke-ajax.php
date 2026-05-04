@@ -16,6 +16,7 @@ class Zakeke_AJAX {
 		add_action( 'wc_ajax_zakeke_get_configurator_price', array( __CLASS__, 'get_configurator_price' ) );
 		add_action( 'wc_ajax_zakeke_share', array( __CLASS__, 'share' ) );
 		add_action( 'wc_ajax_zakeke_update_cart', array( __CLASS__, 'update_cart' ) );
+		add_action( 'wc_ajax_zakeke_convert_price_currency', array( __CLASS__, 'convert_price_currency' ) );
 	}
 
 	/**
@@ -233,6 +234,43 @@ class Zakeke_AJAX {
 	}
 
 	/**
+	 * Convert a list of prices applying currency conversion and tax display logic.
+	 */
+	public static function convert_price_currency() {
+		ob_start();
+
+		if ( ! empty( $_REQUEST['product_id'] ) ) {
+			$product_id = sanitize_text_field( wp_unslash( $_REQUEST['product_id'] ) );
+		} elseif ( ! empty( $_REQUEST['add-to-cart'] ) ) {
+			$product_id = sanitize_text_field( wp_unslash( $_REQUEST['add-to-cart'] ) );
+		} elseif ( ! empty( $_REQUEST['ztmp_prefix_add-to-cart'] ) ) {
+			$product_id = sanitize_text_field( wp_unslash( $_REQUEST['ztmp_prefix_add-to-cart'] ) );
+		} else {
+			return;
+		}
+
+		$product = wc_get_product( absint( $product_id ) );
+		if ( ! $product ) {
+			die();
+		}
+
+		$prices = array();
+		if ( ! empty( $_REQUEST['prices'] ) ) {
+			$prices = json_decode( sanitize_text_field( wp_unslash( $_REQUEST['prices'] ) ), true );
+			if ( ! is_array( $prices ) ) {
+				$prices = array();
+			}
+		}
+
+		$converted_prices = array();
+		foreach ( $prices as $price ) {
+			$converted_prices[] = (float) zakeke_wc_get_price_to_display( $product, array( 'price' => (float) $price ) );
+		}
+
+		wp_send_json( array( 'prices' => $converted_prices ) );
+	}
+
+	/**
 	 * Get a matching variation price based on posted attributes.
 	 */
 	public static function get_configurator_price() {
@@ -339,7 +377,24 @@ class Zakeke_AJAX {
 		$webservice  = new Zakeke_Webservice();
 		$integration = new Zakeke_Integration();
 
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
+		$request_qty = null;
+		if ( isset( $_REQUEST['quantity'] ) ) {
+			$request_qty = wc_stock_amount( preg_replace( '/[^0-9\.]/', '', sanitize_text_field( wp_unslash( $_REQUEST['quantity'] ) ) ) );
+			if ( $request_qty <= 0 ) {
+				$request_qty = null;
+			}
+		}
+
+		$edit_design = isset( $_REQUEST['zdesign_edit'] )
+			? sanitize_text_field( wp_unslash( $_REQUEST['zdesign_edit'] ) )
+			: null;
+
+		$cart_items    = WC()->cart->get_cart();
+		$is_group      = $edit_design && $request_qty
+			? zakeke_is_design_group( $edit_design, $cart_items )
+			: false;
+
+		foreach ( $cart_items as $cart_item_key => $values ) {
 			if ( ! isset( $values['zakeke_data'] ) ) {
 				continue;
 			}
@@ -347,6 +402,10 @@ class Zakeke_AJAX {
 			$zakeke_data = $values['zakeke_data'];
 
 			$cart_item_data = &WC()->cart->cart_contents[ $cart_item_key ];
+
+			if ( $request_qty && $edit_design && $zakeke_data['design'] === $edit_design && ! $is_group ) {
+				$cart_item_data['quantity'] = $request_qty;
+			}
 
 			$qty = $cart_item_data['quantity'];
 			if ( $qty <= 0 ) {

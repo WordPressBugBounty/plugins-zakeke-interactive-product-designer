@@ -227,6 +227,10 @@ class Zakeke_Webservice {
 			$res->quantity_packages = $json['quantityPackages'];
 		}
 
+		if (isset($json['quantityRuleType'])) {
+			$res->quantity_rule_type = $json['quantityRuleType'];
+		}
+
 		if (isset($json['additionalAttributes'])) {
 			$res->additional_attributes = $json['additionalAttributes'];
 		}
@@ -296,7 +300,11 @@ class Zakeke_Webservice {
 		if (isset($result['quantityPackages'])) {
 			$result['quantity_packages'] = $result['quantityPackages'];
 		}
-		
+
+		if (isset($result['quantityRuleType'])) {
+			$result['quantity_rule_type'] = $result['quantityRuleType'];
+		}
+
 		return $result;
 	}
 

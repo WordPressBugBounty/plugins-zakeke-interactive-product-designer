@@ -34,4 +34,12 @@
 	div:not(#zakeke-container) {
 		display: none;
 	}
+
+	div.zakeke-site-blocks {
+		display: block;
+	}
+
+	div.wp-site-blocks {
+		display: block;
+	}
 }

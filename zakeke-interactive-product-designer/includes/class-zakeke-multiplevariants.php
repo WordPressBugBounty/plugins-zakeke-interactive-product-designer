@@ -171,6 +171,11 @@ class Zakeke_Multiplevariants {
 			$additional_attributes = $zakeke_cart_data->additional_attributes;
 		}
 
+		$quantity_rule_type = null;
+		if (isset($zakeke_cart_data->quantity_rule_type)) {
+			$quantity_rule_type = $zakeke_cart_data->quantity_rule_type;
+		}
+
 		return array(
 			'zakeke_data' => array(
 				'design'                        => $design,
@@ -184,7 +189,8 @@ class Zakeke_Multiplevariants {
 				'min_quantity'                  => $min_quantity,
 				'quantity_step'                 => $quantity_step,
 				'quantity_packages'             => $quantity_packages,
-				'additional_attributes'         => $additional_attributes
+				'additional_attributes'         => $additional_attributes,
+				'quantity_rule_type'            => $quantity_rule_type
 			)
 		);
 	}

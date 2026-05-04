@@ -174,6 +174,11 @@ class Zakeke_Cart {
 				$additional_attributes = $zakeke_cart_data->additional_attributes;
 			}
 
+			$quantity_rule_type = null;
+			if (isset($zakeke_cart_data->quantity_rule_type)) {
+				$quantity_rule_type = $zakeke_cart_data->quantity_rule_type;
+			}
+
 			$cart_item_meta['zakeke_data'] = array(
 				'design'                        => $design,
 				'previews'                      => $zakeke_cart_data->previews,
@@ -186,7 +191,8 @@ class Zakeke_Cart {
 				'min_quantity'                  => $min_quantity,
 				'quantity_step'                 => $quantity_step,
 				'quantity_packages'             => $quantity_packages,
-				'additional_attributes'         => $additional_attributes
+				'additional_attributes'         => $additional_attributes,
+				'quantity_rule_type'            => $quantity_rule_type
 			);
 		} elseif ( self::is_zakeke_configurator_product() ) {
 			$webservice = new Zakeke_Webservice();
@@ -239,6 +245,11 @@ class Zakeke_Cart {
 				$quantity_packages = $zakeke_cart_data['quantity_packages'];
 			}
 
+			$quantity_rule_type = null;
+			if (isset($zakeke_cart_data['quantity_rule_type'])) {
+				$quantity_rule_type = $zakeke_cart_data['quantity_rule_type'];
+			}
+
 			$cart_item_meta['zakeke_configurator_data'] = array(
 				'composition'                   => $zakeke_configuration,
 				'design'                        => $zakeke_cart_data['designID'],
@@ -252,7 +263,8 @@ class Zakeke_Cart {
 				'additional_properties'         => $additional_properties,
 				'min_quantity'                  => $min_quantity,
 				'quantity_step'                 => $quantity_step,
-				'quantity_packages'             => $quantity_packages
+				'quantity_packages'             => $quantity_packages,
+				'quantity_rule_type'            => $quantity_rule_type
 			);
 		}
 
@@ -419,7 +431,8 @@ class Zakeke_Cart {
 
 				$cart_item_data = &WC()->cart->cart_contents[ $cart_item_key ];
 
-				$qty = zakeke_cart_total_qty_for_design( $zakeke_data['design'], $cart );
+				$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
+				$qty = zakeke_get_effective_qty_for_design( $zakeke_data['design'], $cart, $cart_totals[ $cart_item_key ]['qty'], $quantity_rule_type );
 
 				$modificationId = null;
 				if (isset($zakeke_data['modificationID'])) {
@@ -538,7 +551,8 @@ class Zakeke_Cart {
 
 				$cart_item_data = &$cart_source->cart_contents[ $cart_item_key ];
 
-				$qty = zakeke_cart_total_qty_for_design( $zakeke_data['design'], $cart );
+				$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
+				$qty = zakeke_get_effective_qty_for_design( $zakeke_data['design'], $cart, $values['quantity'], $quantity_rule_type );
 
 				$modificationId = null;
 				if (isset($zakeke_data['modificationID'])) {
@@ -706,22 +720,30 @@ class Zakeke_Cart {
 	}
 
 	public static function update_cart_validation($passed_validation, $cart_item_key, $values, $quantity) {
-		if ($passed_validation && isset($values['zakeke_data']) && !isset($values['zakeke_data']['modificationID'])) {
+		// Skip validation if the item is being removed
+		if ($quantity <= 0) {
+			return $passed_validation;
+		}
+
+		if ($passed_validation && isset($values['zakeke_data'])) {
 			$zakeke_data = $values['zakeke_data'];
 
-			$min_quantity = null;
-			if ( isset( $zakeke_data['min_quantity'] ) ) {
-				$min_quantity = $zakeke_data['min_quantity'];
+			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
+
+			// Check min_quantity only for variant rule type
+			// Group items are added one by one so validating min_quantity here would block adding to cart
+			if ($quantity_rule_type === 'variant') {
+				$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
+
+				if ($min_quantity !== null && $quantity < $min_quantity) {
+					wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
+					$passed_validation = false;
+				}
 			}
 
 			$quantity_step = null;
 			if ( isset( $zakeke_data['quantity_step'] ) ) {
 				$quantity_step = $zakeke_data['quantity_step'];
-			}
-
-			if ($min_quantity !== null && $quantity < $min_quantity) {
-				wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
-				$passed_validation = false;
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
@@ -734,7 +756,7 @@ class Zakeke_Cart {
 				$quantity_packages = $zakeke_data['quantity_packages'];
 			}
 
-			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
 				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
 				$passed_validation = false;
@@ -770,7 +792,7 @@ class Zakeke_Cart {
 				$quantity_packages = $zakeke_data['quantity_packages'];
 			}
 
-			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
 				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
 				$passed_validation = false;
@@ -795,18 +817,21 @@ class Zakeke_Cart {
 
 			$zakeke_data = $cart_item['zakeke_data'];
 
-			$min_quantity = null;
-			if ( isset( $zakeke_data['min_quantity'] ) ) {
-				$min_quantity = $zakeke_data['min_quantity'];
+			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
+
+			// Check min_quantity only for variant rule type
+			// Group items are added one by one so validating min_quantity here would block adding to cart
+			if ($quantity_rule_type === 'variant') {
+				$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
+
+				if ($min_quantity !== null && $quantity < $min_quantity) {
+					throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
+				}
 			}
 
 			$quantity_step = null;
 			if ( isset( $zakeke_data['quantity_step'] ) ) {
 				$quantity_step = $zakeke_data['quantity_step'];
-			}
-
-			if ($min_quantity !== null && $quantity < $min_quantity) {
-				throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
@@ -818,7 +843,7 @@ class Zakeke_Cart {
 				$quantity_packages = $zakeke_data['quantity_packages'];
 			}
 
-			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
 				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
 			}
@@ -853,7 +878,7 @@ class Zakeke_Cart {
 				$quantity_packages = $zakeke_data['quantity_packages'];
 			}
 
-			if ( $quantity_packages !== null && is_array( $quantity_packages ) && !in_array( $quantity, $quantity_packages, true ) ) {
+			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
 				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
 			}

@@ -25,6 +25,10 @@ if ( ! class_exists( 'Zakeke_Integration' ) ) :
 
 		public $hide_price;
 
+		public $accessibility_mode;
+
+		public $block_theme_support;
+
 		/**
 		 * Zakeke Integration Constructor.
 		 */
@@ -51,6 +55,8 @@ if ( ! class_exists( 'Zakeke_Integration' ) ) :
 			$this->show_price_in_cart    = $this->get_option( 'show_price_in_cart' );
 			$this->show_all_sides        = $this->get_option( 'show_all_sides' );
 			$this->share_return_to_product_page = $this->get_option( 'share_return_to_product_page', 'yes' );
+			$this->accessibility_mode           = $this->get_option( 'accessibility_mode', 'no' );
+			$this->block_theme_support          = $this->get_option( 'block_theme_support', 'no' );
 
 			// Actions.
 			add_action( 'woocommerce_update_options_integration_' . $this->id,
@@ -169,6 +175,20 @@ if ( ! class_exists( 'Zakeke_Integration' ) ) :
 					'type'        => 'checkbox',
 					'default'     => 'yes',
 					'description' => __( 'Check to show the product page first when visiting a url shared by Zakeke', 'zakeke' )
+				),
+				'accessibility_mode' => array(
+					'title'       => __( 'Accessibility mode', 'zakeke' ),
+					'type'        => 'checkbox',
+					'default'     => 'no',
+					'description' => __( 'Enable enhanced accessibility features for the product customizer, including improved keyboard navigation, screen reader support, and higher contrast UI elements',
+						'zakeke' )
+				),
+				'block_theme_support' => array(
+					'title'       => __( 'Block theme support', 'zakeke' ),
+					'type'        => 'checkbox',
+					'default'     => 'no',
+					'description' => __( 'Enable native block theme rendering for full-page Zakeke designer and configurator templates. This uses the active block theme header and footer instead of the classic PHP template wrapper.',
+						'zakeke' )
 				),
 				'debug' => array(
 					'title'       => __( 'Debug Log', 'zakeke' ),

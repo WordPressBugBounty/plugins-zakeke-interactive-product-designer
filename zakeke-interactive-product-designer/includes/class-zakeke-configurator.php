@@ -14,6 +14,7 @@ class Zakeke_Configurator {
 	 */
 	public static function init() {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_scripts' ), 20 );
+		add_action( 'init', array( __CLASS__, 'register_block' ) );
 		add_shortcode( 'zakeke_configurator', __CLASS__ . '::output' );
 
 		if ( ! self::should_show_configurator() ) {
@@ -21,6 +22,10 @@ class Zakeke_Configurator {
 		}
 
 		remove_action( 'wp_loaded', array( 'WC_Form_Handler', 'add_to_cart_action' ), 20 );
+
+		if ( zakeke_should_use_block_theme_templates() ) {
+			add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 20 );
+		}
 
 		add_filter( 'template_include', array( __CLASS__, 'template_loader' ), 20000000 );
 	}
@@ -35,6 +40,28 @@ class Zakeke_Configurator {
 
 		wp_register_script( 'zakeke-configurator', get_zakeke()->plugin_url() . '/assets/js/frontend/configurator.js',
 			array( 'jquery' ), ZAKEKE_VERSION );
+	}
+
+	public static function register_block() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+
+		if ( class_exists( 'WP_Block_Type_Registry' ) && WP_Block_Type_Registry::get_instance()->is_registered( 'zakeke/configurator' ) ) {
+			return;
+		}
+
+		register_block_type( 'zakeke/configurator', array(
+			'render_callback' => array( __CLASS__, 'render_block' ),
+		) );
+	}
+
+	public static function render_block( $attributes = array(), $content = '', $block = null ) {
+		if ( ! self::should_show_configurator() ) {
+			return '';
+		}
+
+		return self::output();
 	}
 
 	public static function enqueue_scripts() {
@@ -134,6 +161,14 @@ class Zakeke_Configurator {
 	public static function template_loader() {
 		$file     = 'zakeke-configurator-product-page.php';
 		$template = locate_template( $file );
+
+		if ( ! $template && zakeke_should_use_block_theme_templates() ) {
+			$template = zakeke_get_block_theme_template_canvas(
+				'zakeke/configurator',
+				'zakeke-configurator'
+			);
+		}
+
 		if ( ! $template ) {
 			$template = get_zakeke()->plugin_path() . '/templates/' . $file;
 		}

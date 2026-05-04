@@ -108,6 +108,32 @@ function zakekeDesigner(config) {
 			});
 	}
 
+	function convertPriceCurrency(data) {
+		const promiseId = data.promiseId;
+		const prices = data.prices;
+
+		let params = cleanParams(Object.assign({}, config.params));
+
+		jQuery.ajax({
+			url: config.wc_ajax_url.replace('%%endpoint%%', 'zakeke_convert_price_currency'),
+			type: 'POST',
+			data: Object.assign(params, { prices: JSON.stringify(prices) })
+		})
+			.done(function (response) {
+				if (typeof response === 'string' || response instanceof String) {
+					response = JSON.parse(response.trim());
+				}
+
+				getZakekeIframe().contentWindow.postMessage({
+					data: {
+						promiseId: promiseId,
+						prices: response.prices
+					},
+					zakekeMessageType: 9
+				}, '*');
+			});
+	}
+
 	function updatedParams(color, zakekeOptions) {
 		if (color == null) {
 			throw new Error('color param is null');
@@ -260,10 +286,19 @@ function zakekeDesigner(config) {
 		});
 	}
 
-	function updateCart() {
-		return jQuery.ajax(
-			config.wc_ajax_url.replace('%%endpoint%%', 'zakeke_update_cart')
-		).then(data => {
+	function updateCart(quantity) {
+		var data = {};
+		if (quantity) {
+			data.quantity = quantity;
+		}
+		if (config.params.zdesign_edit) {
+			data.zdesign_edit = config.params.zdesign_edit;
+		}
+		return jQuery.ajax({
+			url: config.wc_ajax_url.replace('%%endpoint%%', 'zakeke_update_cart'),
+			type: 'POST',
+			data: data
+		}).then(data => {
 			if (data && data.return_url) {
 				window.location.href = data.return_url;
 			}
@@ -311,18 +346,55 @@ function zakekeDesigner(config) {
 		return url.toString();
 	}
 
+	function applyAccessibilityMode() {
+		if (!config.accessibility_mode || config.from_shortcode || window.matchMedia('(min-width: 769px)').matches) return;
+
+		const dialog = document.createElement('dialog');
+		dialog.id = container.id;
+		dialog.title = container.title;
+
+		const loadingStatus = Object.assign(document.createElement('p'), {
+			id: 'zakeke-loading-status',
+			tabIndex: 0,
+			textContent: 'Customizer is loading',
+		});
+		loadingStatus.setAttribute('role', 'log');
+		loadingStatus.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0';
+
+		dialog.append(loadingStatus, ...container.childNodes);
+		container.replaceWith(dialog);
+		dialog.showModal();
+		container = dialog;
+
+		setTimeout(() => {
+			const el = document.getElementById('zakeke-loading-status');
+			if (el && el.textContent !== 'Customizer loaded and available') {
+				el.textContent = 'Customizer loaded and available';
+			}
+		}, 10000);
+	}
+
 	var productDataCache           = {},
 		pendingProductDataRequests = [],
 		container                  = document.getElementById('zakeke-container');
+
+	applyAccessibilityMode();
 
 	window.addEventListener('message', event => {
 		if (event.origin !== config.zakekeUrl) {
 			return;
 		}
 
+		if (event.data.zakekeMessageType === 'boot-completed') {
+			var loadingEl = document.getElementById('zakeke-loading-status');
+			if (loadingEl) {
+				loadingEl.textContent = 'Customizer loaded and available';
+			}
+		}
+
 		if (event.data.zakekeMessageType === 0) {
 			if (config.params.zdesign_edit) {
-				updateCart();
+				updateCart(event.data.quantity);
 			} else {
 				addToCart(event.data.colorId, event.data.designId, event.data.quantity);
 			}
@@ -336,6 +408,9 @@ function zakekeDesigner(config) {
 			}
 			if (event.data.design.conditions) {
 				zakekeOptions['zakeke-conditions'] = event.data.design.conditions;
+			}
+			if (event.data.design.quantity) {
+				zakekeOptions['quantity'] = event.data.design.quantity;
 			}
 
 			productData(event.data.design.color, zakekeOptions);
@@ -376,6 +451,8 @@ function zakekeDesigner(config) {
 					url: buildSharedUrl(event.data.data.designDocID)
 				}
 			}, '*');
+		} else if (event.data.zakekeMessageType === 9) {
+			convertPriceCurrency(event.data.data);
 		} else if (event.data.zakekeMessageType === 6 || event.data.zakekeMessageType === 8) {
 			return addToCartAjax({
 				zdesign: event.data.data.designID,
@@ -388,7 +465,7 @@ function zakekeDesigner(config) {
 
 	getAuthToken().then(auth => {
 		const isLarge = window.matchMedia('(min-width: 769px)').matches;
-		if (!isLarge && !config.from_shortcode) {
+		if (!isLarge && !config.from_shortcode && container.nodeName === 'DIV' && !config.accessibility_mode) {
 			document.body.appendChild(container);
 		}
 		const customizerUrl   = isLarge ? config.customizerLargeUrl : config.customizerSmallUrl;

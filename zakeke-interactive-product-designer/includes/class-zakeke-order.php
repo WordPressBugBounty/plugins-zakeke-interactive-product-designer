@@ -378,91 +378,55 @@ class Zakeke_Order {
 			return;
 		}
 
-		// Group cart items by modificationID
-		$modification_groups = array();
+		$cart_items = WC()->cart->get_cart();
 
-		foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
-			// Only process items that have zakeke_data with modificationID
-			if (isset($cart_item['zakeke_data']) && isset($cart_item['zakeke_data']['modificationID'])) {
-				$zakeke_data = $cart_item['zakeke_data'];
-				$modification_id = $zakeke_data['modificationID'];
-				$quantity = $cart_item['quantity'];
-
-				// Initialize group if not exists
-				if (!isset($modification_groups[$modification_id])) {
-					$modification_groups[$modification_id] = array(
-						'total_quantity' => 0,
-						'min_quantity' => null,
-						'quantity_step' => null,
-						'quantity_packages' => null,
-						'product_name' => isset($cart_item['data']) ? $cart_item['data']->get_name() : __('Product', 'zakeke'),
-						'zakeke_data' => $zakeke_data
-					);
-				}
-
-				// Add quantity to the group total
-				$modification_groups[$modification_id]['total_quantity'] += $quantity;
-
-				// Set min_quantity and quantity_step if available (use from any item in the group)
-				if (isset($zakeke_data['min_quantity']) && $modification_groups[$modification_id]['min_quantity'] === null) {
-					$modification_groups[$modification_id]['min_quantity'] = $zakeke_data['min_quantity'];
-				}
-
-				if (isset($zakeke_data['quantity_step']) && $modification_groups[$modification_id]['quantity_step'] === null) {
-					$modification_groups[$modification_id]['quantity_step'] = $zakeke_data['quantity_step'];
-				}
-
-				if (isset($zakeke_data['quantity_packages']) && $modification_groups[$modification_id]['quantity_packages'] === null) {
-					$modification_groups[$modification_id]['quantity_packages'] = $zakeke_data['quantity_packages'];
-				}
+		foreach ($cart_items as $cart_item_key => $cart_item) {
+			if (!isset($cart_item['zakeke_data'])) {
+				continue;
 			}
-		}
 
-		// Validate each modification group
-		foreach ($modification_groups as $modification_id => $group) {
-			$total_quantity = $group['total_quantity'];
-			$min_quantity = $group['min_quantity'];
-			$quantity_step = $group['quantity_step'];
-			$quantity_packages = $group['quantity_packages'];
-			$product_name = $group['product_name'];
+			$zakeke_data = $cart_item['zakeke_data'];
+			$quantity = $cart_item['quantity'];
+			$product_name = isset($cart_item['data']) ? $cart_item['data']->get_name() : __('Product', 'zakeke');
 
-			// Check minimum quantity requirement
-			if ($min_quantity !== null && $total_quantity < $min_quantity) {
-				wc_add_notice( 
-					sprintf( 
-						__( '%s (Modification ID: %s): You need to have at least %d of this item in total.', 'zakeke' ), 
-						$product_name,
-						$modification_id,
-						$min_quantity 
-					), 
-					'error' 
+			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
+			$effective_quantity = zakeke_get_effective_qty_for_design( $zakeke_data['design'], $cart_items, $quantity, $quantity_rule_type );
+
+			$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
+			$quantity_step = isset($zakeke_data['quantity_step']) ? $zakeke_data['quantity_step'] : null;
+			$quantity_packages = isset($zakeke_data['quantity_packages']) ? $zakeke_data['quantity_packages'] : null;
+
+			if ($min_quantity !== null && $effective_quantity < $min_quantity) {
+				wc_add_notice(
+					sprintf(
+						__( 'You need to have at least %d of "%s".', 'zakeke' ),
+						$min_quantity,
+						$product_name
+					),
+					'error'
 				);
 			}
 
-			// Check quantity step requirement
-			if ($quantity_step !== null && $total_quantity % $quantity_step !== 0) {
-				wc_add_notice( 
-					sprintf( 
-						__( '%s (Modification ID: %s): Total quantity must be in multiples of %d.', 'zakeke' ), 
+			if ($quantity_step !== null && $quantity % $quantity_step !== 0) {
+				wc_add_notice(
+					sprintf(
+						__( '"%s" quantity must be in multiples of %d.', 'zakeke' ),
 						$product_name,
-						$modification_id,
-						$quantity_step 
-					), 
-					'error' 
+						$quantity_step
+					),
+					'error'
 				);
 			}
 
-			// Check quantity packages requirement
-			if ($quantity_packages !== null && is_array($quantity_packages) && !in_array($total_quantity, $quantity_packages, true)) {
+			if ($quantity_packages !== null && is_array($quantity_packages) && count($quantity_packages) > 0 && !in_array($quantity, $quantity_packages, true)) {
 				$allowed_quantities = implode(', ', $quantity_packages);
-				wc_add_notice( 
-					sprintf( 
-						__( '%s (Modification ID: %s): Total quantity can only be one of these values: %s.', 'zakeke' ), 
+				wc_add_notice(
+					sprintf(
+						__( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ),
 						$product_name,
-						$modification_id,
-						$allowed_quantities 
-					), 
-					'error' 
+						$allowed_quantities
+					),
+					'error'
 				);
 			}
 		}
