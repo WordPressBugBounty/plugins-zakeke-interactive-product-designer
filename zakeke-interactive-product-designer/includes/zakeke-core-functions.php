@@ -142,7 +142,7 @@ function zakeke_customizer_url(
     $request_params,
     $mobile,
     $product = null,
-    $template = null,
+    $template = null
 ) {
     $integration = new Zakeke_Integration();
 
@@ -258,7 +258,7 @@ function zakeke_customizer_url(
 function zakeke_customizer_config(
     $product = null,
     $template = null,
-    $from_shortcode = false,
+    $from_shortcode = false
 ) {
     $params = $_REQUEST;
 
@@ -429,7 +429,7 @@ function zakeke_get_effective_qty_for_design(
     $design,
     $cart_items,
     $item_qty,
-    $quantity_rule_type = null,
+    $quantity_rule_type = null
 ) {
     if ($quantity_rule_type === "variant") {
         $qty = (int) $item_qty;
