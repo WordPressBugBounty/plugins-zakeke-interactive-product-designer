@@ -371,7 +371,7 @@ class Zakeke_Order {
 
 	/**
 	 * Validate Zakeke product quantities at checkout
-	 * Groups cart items by modificationID and validates total quantities against minimum requirements
+	 * Product quantity rule groups are validated against their cart total quantity.
 	 */
 	public static function validate_checkout_quantities() {
 		if (!WC()->cart) {
@@ -379,6 +379,7 @@ class Zakeke_Order {
 		}
 
 		$cart_items = WC()->cart->get_cart();
+		$validated_product_groups = array();
 
 		foreach ($cart_items as $cart_item_key => $cart_item) {
 			if (!isset($cart_item['zakeke_data'])) {
@@ -391,6 +392,17 @@ class Zakeke_Order {
 
 			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
 			$effective_quantity = zakeke_get_effective_qty_for_design( $zakeke_data['design'], $cart_items, $quantity, $quantity_rule_type );
+			$is_product_quantity_rule = zakeke_is_product_quantity_rule_type($quantity_rule_type);
+
+			if ($is_product_quantity_rule) {
+				if (isset($validated_product_groups[$zakeke_data['design']])) {
+					continue;
+				}
+
+				$validated_product_groups[$zakeke_data['design']] = true;
+			}
+
+			$validation_quantity = $is_product_quantity_rule ? $effective_quantity : $quantity;
 
 			$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
 			$quantity_step = isset($zakeke_data['quantity_step']) ? $zakeke_data['quantity_step'] : null;
@@ -399,18 +411,18 @@ class Zakeke_Order {
 			if ($min_quantity !== null && $effective_quantity < $min_quantity) {
 				wc_add_notice(
 					sprintf(
-						__( 'You need to have at least %d of "%s".', 'zakeke' ),
-						$min_quantity,
-						$product_name
+						__( '%s must have a minimum quantity of %d.', 'zakeke' ),
+						$product_name,
+						$min_quantity
 					),
 					'error'
 				);
 			}
 
-			if ($quantity_step !== null && $quantity % $quantity_step !== 0) {
+			if ($quantity_step !== null && $validation_quantity % $quantity_step !== 0) {
 				wc_add_notice(
 					sprintf(
-						__( '"%s" quantity must be in multiples of %d.', 'zakeke' ),
+						__( '%s must be purchased in multiples of %d.', 'zakeke' ),
 						$product_name,
 						$quantity_step
 					),
@@ -418,11 +430,11 @@ class Zakeke_Order {
 				);
 			}
 
-			if ($quantity_packages !== null && is_array($quantity_packages) && count($quantity_packages) > 0 && !in_array($quantity, $quantity_packages, true)) {
+			if ($quantity_packages !== null && is_array($quantity_packages) && count($quantity_packages) > 0 && !in_array($validation_quantity, $quantity_packages, true)) {
 				$allowed_quantities = implode(', ', $quantity_packages);
 				wc_add_notice(
 					sprintf(
-						__( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ),
+						__( '%s can only be purchased in the following quantities: %s.', 'zakeke' ),
 						$product_name,
 						$allowed_quantities
 					),

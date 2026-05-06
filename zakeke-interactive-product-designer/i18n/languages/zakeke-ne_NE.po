@@ -152,3 +152,30 @@ msgstr "सेटिङ्हरू"
 #. Description of the plugin/theme
 msgid "Innovative platform to let your customers to customize products in your e-store. Multi-language, mult-currency, 3D view and print-ready outputs."
 msgstr "अभिनव प्लेटफर्मले तपाईंको ग्राहकहरूलाई तपाईंको ई-स्टोरमा अनुकूलित गर्न अनुमति दिन्छ। बहु भाषा, बहु-मुद्रा, 3D दृश्य र प्रिन्ट-तयार आउटपुटहरू।"
+
+#: includes/class-zakeke-cart.php:743
+#: includes/class-zakeke-cart.php:785
+#: includes/class-zakeke-cart.php:834
+#: includes/class-zakeke-cart.php:875
+#: includes/class-zakeke-order.php:414
+#, php-format
+msgid "%s must have a minimum quantity of %d."
+msgstr "%s को न्यूनतम मात्रा %d हुनुपर्छ."
+
+#: includes/class-zakeke-cart.php:754
+#: includes/class-zakeke-cart.php:790
+#: includes/class-zakeke-cart.php:844
+#: includes/class-zakeke-cart.php:879
+#: includes/class-zakeke-order.php:425
+#, php-format
+msgid "%s must be purchased in multiples of %d."
+msgstr "%s %d का गुणनहरूमा खरिद गर्नुपर्छ."
+
+#: includes/class-zakeke-cart.php:765
+#: includes/class-zakeke-cart.php:801
+#: includes/class-zakeke-cart.php:854
+#: includes/class-zakeke-cart.php:889
+#: includes/class-zakeke-order.php:437
+#, php-format
+msgid "%s can only be purchased in the following quantities: %s."
+msgstr "%s निम्न मात्राहरूमा मात्र खरिद गर्न सकिन्छ: %s."

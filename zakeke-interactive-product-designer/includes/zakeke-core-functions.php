@@ -414,6 +414,18 @@ function zakeke_is_design_group($design, $cart_items)
 }
 
 /**
+ * Check if quantity rules should be evaluated at product group level.
+ *
+ * @param string|null $quantity_rule_type
+ *
+ * @return bool
+ */
+function zakeke_is_product_quantity_rule_type($quantity_rule_type)
+{
+    return "product" === strtolower((string) $quantity_rule_type);
+}
+
+/**
  * Get the effective quantity for a design in the cart, based on the quantity rule type.
  * If "variant", returns the individual cart item quantity.
  * If "product" or null, aggregates all cart items with the same design.

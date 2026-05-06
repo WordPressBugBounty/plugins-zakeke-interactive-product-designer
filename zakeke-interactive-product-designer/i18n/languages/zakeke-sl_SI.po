@@ -152,3 +152,30 @@ msgstr "Nastavitve"
 #. Description of the plugin/theme
 msgid "Innovative platform to let your customers to customize products in your e-store. Multi-language, mult-currency, 3D view and print-ready outputs."
 msgstr "Inovativna platforma, ki strankam omogoča prilagajanje izdelkov v vaši trgovini. Več-jezikovni, večvaluti, 3D-pogled in izpisi, pripravljeni za tisk."
+
+#: includes/class-zakeke-cart.php:743
+#: includes/class-zakeke-cart.php:785
+#: includes/class-zakeke-cart.php:834
+#: includes/class-zakeke-cart.php:875
+#: includes/class-zakeke-order.php:414
+#, php-format
+msgid "%s must have a minimum quantity of %d."
+msgstr "%s mora imeti najmanjšo količino %d."
+
+#: includes/class-zakeke-cart.php:754
+#: includes/class-zakeke-cart.php:790
+#: includes/class-zakeke-cart.php:844
+#: includes/class-zakeke-cart.php:879
+#: includes/class-zakeke-order.php:425
+#, php-format
+msgid "%s must be purchased in multiples of %d."
+msgstr "%s mora biti kupljen v večkratnikih %d."
+
+#: includes/class-zakeke-cart.php:765
+#: includes/class-zakeke-cart.php:801
+#: includes/class-zakeke-cart.php:854
+#: includes/class-zakeke-cart.php:889
+#: includes/class-zakeke-order.php:437
+#, php-format
+msgid "%s can only be purchased in the following quantities: %s."
+msgstr "%s je mogoče kupiti samo v naslednjih količinah: %s."

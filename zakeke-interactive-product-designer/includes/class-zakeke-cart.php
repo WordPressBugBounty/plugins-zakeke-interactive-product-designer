@@ -725,18 +725,22 @@ class Zakeke_Cart {
 			return $passed_validation;
 		}
 
+		$product_name = isset($values['data']) ? $values['data']->get_name() : __('Product', 'zakeke');
+
 		if ($passed_validation && isset($values['zakeke_data'])) {
 			$zakeke_data = $values['zakeke_data'];
 
 			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
 
-			// Check min_quantity only for variant rule type
-			// Group items are added one by one so validating min_quantity here would block adding to cart
+			if (zakeke_is_product_quantity_rule_type($quantity_rule_type)) {
+				return $passed_validation;
+			}
+
 			if ($quantity_rule_type === 'variant') {
 				$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
 
 				if ($min_quantity !== null && $quantity < $min_quantity) {
-					wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
+					wc_add_notice( sprintf( __( '%s must have a minimum quantity of %d.', 'zakeke' ), $product_name, $min_quantity ), 'error' );
 					$passed_validation = false;
 				}
 			}
@@ -747,7 +751,7 @@ class Zakeke_Cart {
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
-				wc_add_notice( sprintf( __( 'You can only add this item in multiples of %d.', 'zakeke' ), $quantity_step ), 'error' );
+				wc_add_notice( sprintf( __( '%s must be purchased in multiples of %d.', 'zakeke' ), $product_name, $quantity_step ), 'error' );
 				$passed_validation = false;
 			}
 
@@ -758,7 +762,7 @@ class Zakeke_Cart {
 
 			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
-				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
+				wc_add_notice( sprintf( __( '%s can only be purchased in the following quantities: %s.', 'zakeke' ), $product_name, $allowed_quantities ), 'error' );
 				$passed_validation = false;
 			}
 		}
@@ -778,12 +782,12 @@ class Zakeke_Cart {
 			}
 
 			if ($min_quantity !== null && $quantity < $min_quantity) {
-				wc_add_notice( sprintf( __( 'You need to have at least %d of this item.', 'zakeke' ), $min_quantity ), 'error' );
+				wc_add_notice( sprintf( __( '%s must have a minimum quantity of %d.', 'zakeke' ), $product_name, $min_quantity ), 'error' );
 				$passed_validation = false;
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
-				wc_add_notice( sprintf( __( 'You can only add this item in multiples of %d.', 'zakeke' ), $quantity_step ), 'error' );
+				wc_add_notice( sprintf( __( '%s must be purchased in multiples of %d.', 'zakeke' ), $product_name, $quantity_step ), 'error' );
 				$passed_validation = false;
 			}
 
@@ -794,7 +798,7 @@ class Zakeke_Cart {
 
 			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
-				wc_add_notice( sprintf( __( 'This item can only be ordered in these quantities: %s.', 'zakeke' ), $allowed_quantities ), 'error' );
+				wc_add_notice( sprintf( __( '%s can only be purchased in the following quantities: %s.', 'zakeke' ), $product_name, $allowed_quantities ), 'error' );
 				$passed_validation = false;
 			}
 		}
@@ -819,13 +823,15 @@ class Zakeke_Cart {
 
 			$quantity_rule_type = isset($zakeke_data['quantity_rule_type']) ? $zakeke_data['quantity_rule_type'] : null;
 
-			// Check min_quantity only for variant rule type
-			// Group items are added one by one so validating min_quantity here would block adding to cart
+			if (zakeke_is_product_quantity_rule_type($quantity_rule_type)) {
+				return;
+			}
+
 			if ($quantity_rule_type === 'variant') {
 				$min_quantity = isset($zakeke_data['min_quantity']) ? $zakeke_data['min_quantity'] : null;
 
 				if ($min_quantity !== null && $quantity < $min_quantity) {
-					throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
+					throw new Exception( sprintf( __( '%s must have a minimum quantity of %d.', 'zakeke' ), $product->get_name(), $min_quantity ), 1099 );
 				}
 			}
 
@@ -835,7 +841,7 @@ class Zakeke_Cart {
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
-				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
+				throw new Exception( sprintf( __( '%s must be purchased in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
 			}
 
 			$quantity_packages = null;
@@ -845,7 +851,7 @@ class Zakeke_Cart {
 
 			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
-				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
+				throw new Exception( sprintf( __( '%s can only be purchased in the following quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
 			}
 		}
 
@@ -866,11 +872,11 @@ class Zakeke_Cart {
 			}
 
 			if ($min_quantity !== null && $quantity < $min_quantity) {
-				throw new Exception( sprintf( __( 'You need to have at least %d of "%s".', 'zakeke' ), $min_quantity, $product->get_name() ), 1099 );
+				throw new Exception( sprintf( __( '%s must have a minimum quantity of %d.', 'zakeke' ), $product->get_name(), $min_quantity ), 1099 );
 			}
 
 			if ( $quantity_step !== null && $quantity % $quantity_step !== 0 ) {
-				throw new Exception( sprintf( __( 'You can only add "%s" in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
+				throw new Exception( sprintf( __( '%s must be purchased in multiples of %d.', 'zakeke' ), $product->get_name(), $quantity_step ), 1100 );
 			}
 
 			$quantity_packages = null;
@@ -880,7 +886,7 @@ class Zakeke_Cart {
 
 			if ( $quantity_packages !== null && is_array( $quantity_packages ) && count( $quantity_packages ) > 0 && !in_array( $quantity, $quantity_packages, true ) ) {
 				$allowed_quantities = implode( ', ', $quantity_packages );
-				throw new Exception( sprintf( __( '"%s" can only be ordered in these quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
+				throw new Exception( sprintf( __( '%s can only be purchased in the following quantities: %s.', 'zakeke' ), $product->get_name(), $allowed_quantities ), 1101 );
 			}
 		}
 	}
