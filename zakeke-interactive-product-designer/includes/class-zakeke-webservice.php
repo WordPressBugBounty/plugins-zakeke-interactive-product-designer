@@ -84,8 +84,13 @@ class Zakeke_Webservice {
 			} else {
 				$error_message = print_r( $raw_response, true );
 			}
-			$this->logger->add( 'zakeke', "Zakeke Webservice Call Error: $url \n METHOD: $method \n BODY: " . print_r( $args,
-					true ) . ' \n ERROR: ' . $error_message );
+			$this->logger->add(
+				'zakeke',
+				'Zakeke Webservice Call Error: ' . zakeke_redact_log_data( $url )
+				. " \n METHOD: " . $method
+				. " \n BODY: " . print_r( zakeke_redact_log_data( $args ), true )
+				. ' \n ERROR: ' . zakeke_redact_log_data( $error_message )
+			);
 
 			throw new Exception( 'Zakeke_Webservice::request failed' );
 		}
@@ -429,7 +434,12 @@ class Zakeke_Webservice {
 			return;
 		}
 
-		$this->logger->add( 'zakeke', "Zakeke Webservice Call: $url \n METHOD: $method \n BODY: " . print_r( $args,
-				true ) . ' \n RESPONSE: ' . print_r( $response, true ) );
+		$this->logger->add(
+			'zakeke',
+			'Zakeke Webservice Call: ' . zakeke_redact_log_data( $url )
+			. " \n METHOD: " . $method
+			. " \n BODY: " . print_r( zakeke_redact_log_data( $args ), true )
+			. ' \n RESPONSE: ' . print_r( zakeke_redact_log_data( $response ), true )
+		);
 	}
 }

@@ -34,6 +34,13 @@ class Zakeke_AJAX {
 			$auth->set_guest( zakeke_guest_code() );
 		}
 
+		if ( empty( $auth->get_customer() ) && empty( $auth->get_guest() ) ) {
+			status_header( 500 );
+			wp_send_json( array(
+				'error' => __( 'Unable to create a scoped customization session.', 'zakeke' )
+			) );
+		}
+
 		try {
 			wp_send_json( array(
 				'token' => $auth->get_auth_token(),

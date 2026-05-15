@@ -81,8 +81,8 @@ class Zakeke_Order {
 					$formatted_meta['zakeke_attr_' . $index] = (object) array(
 						'key'           => $attribute['name'],
 						'value'         => $attribute['value'],
-						'display_key'   => wp_kses_post( $attribute['name'] ),
-						'display_value' => wp_kses_post( $attribute['value'] ),
+						'display_key'   => zakeke_escape_plain_text( $attribute['name'] ),
+						'display_value' => zakeke_escape_plain_text( $attribute['value'] ),
 					);
 				}
 			}
@@ -101,8 +101,8 @@ class Zakeke_Order {
 					$formatted_meta[$item['itemGuid']] = (object) array(
 						'key' => $item['attributeName'],
 						'value' => $item['selectedOptionName'],
-						'display_key' => $item['attributeName'],
-						'display_value' => wpautop($item['selectedOptionName']),
+						'display_key' => zakeke_escape_plain_text($item['attributeName']),
+						'display_value' => zakeke_escape_plain_text($item['selectedOptionName']),
 					);
 				}
 			} catch (Exception $e) {

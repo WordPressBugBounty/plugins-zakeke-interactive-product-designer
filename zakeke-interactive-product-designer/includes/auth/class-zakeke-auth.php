@@ -138,7 +138,12 @@ class Zakeke_Auth extends Zakeke_Auth_Base {
 			return;
 		}
 
-		$this->logger->add( 'zakeke', "Zakeke Auth Call URL: $url \n METHOD: $method \n BODY: " . print_r( $args,
-				true ) . ' \n RESPONSE: ' . print_r( $response, true ) );
+		$this->logger->add(
+			'zakeke',
+			'Zakeke Auth Call URL: ' . zakeke_redact_log_data( $url )
+			. " \n METHOD: " . $method
+			. " \n BODY: " . print_r( zakeke_redact_log_data( $args ), true )
+			. ' \n RESPONSE: ' . print_r( zakeke_redact_log_data( $response ), true )
+		);
 	}
 }

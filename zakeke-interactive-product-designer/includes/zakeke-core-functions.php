@@ -5,6 +5,111 @@ if (!defined("ABSPATH")) {
 }
 
 /**
+ * Redact sensitive fields before writing debug data to WooCommerce logs.
+ *
+ * @param mixed $data Data being logged.
+ *
+ * @return mixed Redacted data.
+ */
+function zakeke_redact_log_data($data)
+{
+    $sensitive_keys = [
+        "authorization",
+        "access_token",
+        "refresh_token",
+        "token",
+        "tokenowin",
+        "client_id",
+        "secret_key",
+        "password",
+        "pwd",
+        "user",
+        "username",
+    ];
+
+    if (is_array($data)) {
+        $redacted = [];
+
+        foreach ($data as $key => $value) {
+            $normalized_key = strtolower((string) $key);
+
+            if (in_array($normalized_key, $sensitive_keys, true)) {
+                $redacted[$key] = "[redacted]";
+                continue;
+            }
+
+            $redacted[$key] = zakeke_redact_log_data($value);
+        }
+
+        return $redacted;
+    }
+
+    if (is_object($data)) {
+        $redacted = new stdClass();
+
+        foreach (get_object_vars($data) as $key => $value) {
+            $normalized_key = strtolower((string) $key);
+            $redacted->$key = in_array($normalized_key, $sensitive_keys, true)
+                ? "[redacted]"
+                : zakeke_redact_log_data($value);
+        }
+
+        return $redacted;
+    }
+
+    if (!is_string($data) || "" === $data) {
+        return $data;
+    }
+
+    $decoded = json_decode($data, true);
+    if (JSON_ERROR_NONE === json_last_error() && is_array($decoded)) {
+        return wp_json_encode(zakeke_redact_log_data($decoded));
+    }
+
+    $sensitive_param_pattern =
+        "(authorization|access_token|refresh_token|tokenOwin|token|client_id|secret_key|password|pwd|user|username)";
+
+    $data = preg_replace(
+        "/([?&]" . $sensitive_param_pattern . "=)[^&\s]*/i",
+        "$1[redacted]",
+        $data
+    );
+
+    $data = preg_replace(
+        "/(\"" . $sensitive_param_pattern . "\"\s*:\s*\")[^\"]*(\")/i",
+        "$1[redacted]$3",
+        $data
+    );
+
+    return preg_replace(
+        "/(Authorization\s*:\s*(?:Basic|Bearer)\s+)[^\s]+/i",
+        "$1[redacted]",
+        $data
+    );
+}
+
+/**
+ * Escape untrusted metadata for plain-text display.
+ *
+ * @param mixed $value Value being displayed.
+ *
+ * @return string Escaped plain text.
+ */
+function zakeke_escape_plain_text($value)
+{
+    if (null === $value) {
+        return "";
+    }
+
+    if (!is_scalar($value)) {
+        $encoded = wp_json_encode($value);
+        $value = false === $encoded ? "" : $encoded;
+    }
+
+    return esc_html((string) $value);
+}
+
+/**
  * Check whether the product is customizable without applying any additional filter on the result.
  *
  * @param int $product_id

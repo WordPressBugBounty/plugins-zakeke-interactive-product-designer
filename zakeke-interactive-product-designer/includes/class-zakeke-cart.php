@@ -86,8 +86,10 @@ class Zakeke_Cart {
 	}
 
 	public static function add_to_cart_redirect( $url, $adding_to_cart = null ) {
-		if ( isset( $_REQUEST['zakeke_return_url'] ) ) {
-			return $_REQUEST['zakeke_return_url'];
+		if ( isset( $_REQUEST['zakeke_return_url'] ) && is_scalar( $_REQUEST['zakeke_return_url'] ) ) {
+			$return_url = esc_url_raw( wp_unslash( $_REQUEST['zakeke_return_url'] ) );
+
+			return wp_validate_redirect( $return_url, $url );
 		}
 
 		return $url;
@@ -359,8 +361,8 @@ class Zakeke_Cart {
 				foreach ( $zakeke_data['additional_attributes'] as $attribute ) {
 					if ( isset( $attribute['name'] ) && isset( $attribute['value'] ) ) {
 						$item_data[] = array(
-							'key'   => wp_kses_post( $attribute['name'] ),
-							'value' => wp_kses_post( $attribute['value'] )
+							'key'   => zakeke_escape_plain_text( $attribute['name'] ),
+							'value' => zakeke_escape_plain_text( $attribute['value'] )
 						);
 					}
 				}
@@ -387,8 +389,8 @@ class Zakeke_Cart {
 				}
 
 				$item_data[] = array(
-					'key'   => $item['attributeName'],
-					'value' => $item['selectedOptionName']
+					'key'   => zakeke_escape_plain_text( $item['attributeName'] ),
+					'value' => zakeke_escape_plain_text( $item['selectedOptionName'] )
 				);
 			}
 		}
