@@ -2,7 +2,7 @@
 Tags: product customizer, product designer, web to print, product builder, designer, woocommerce, integration, product personalizer, customization
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.3.6
+Stable tag: 4.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Let your buyers customize and view their personalized product before purchasing. Get happy customers buying from you and coming back for more.
@@ -11,19 +11,14 @@ Let your buyers customize and view their personalized product before purchasing.
 == Description ==
 
 
-Transform your store with **unique, immersive product experiences** with Zakeke Customizer, 3D Product Configurator, 3D DAM & AR Viewer, and Virtual Try-On.
-Let customers personalize products in real time, view them in realistic 3D, and experience them with AR and virtual try-on.
-Customers design, you receive **production-ready files automatically**. Cut back-and-forth on custom orders, streamline intake, and easily connect to your favorite POD to save time and simplify fulfilment.
-And more: create product visuals at scale with AI, from still life to ads and video, starting from a single product photo.
-Start in hours, not weeks.
+Sell personalized products online with ease using Zakeke, the all-in-one AI product personalizer and configurator for Shopify. Let customers customize products live with text, images, colors, and fonts, while previewing every change instantly in realistic 3D. Every order is automatically converted into a production-ready file for print, engraving or laser cutting, no Photoshop or email proofs. Easily connect your favorite POD provider for a seamless workflow, from customization to fulfilment! Start in hours, not week!
 **What you'll get**:
--   Personalization options for any product: text, image, color, engravings & more
+-   Unlimited personalization options: text, photos, colors, templates, pricing
+-   Real-time customization experience with live preview, even in 3D
+-   Automatic print-ready files for every order: print, engraving, laser cut & more
+-   AI realistic previews for every design: embroidery, stitching and print effects
 -   3D Configurator for made-to-order products with components, textures & more
--   Create, store, manage and share hyper-realistic 3D models without a 3D artist
 -   AI-driven virtual try-on from any device, no app download required
--   Production-ready files auto-generated - no manual edits or back-and-forth
-
--   AI-generated product visuals at scale, starting from a single photo, just with prompts
 
 
 [youtube https://www.youtube.com/watch?v=q-FD0VP6MDY]
@@ -41,7 +36,7 @@ Endless emails and revisions just to get one order right
 Customers send files that aren’t print-ready — and expect you to fix them in Photoshop
 Shoppers complain because what they got isn’t what they saw
 
-Instead of “ka-ching!” the only thing you hear is “ka-boom!”. It’s back-and-forth and file wrangling.
+It’s back-and-forth and file wrangling.
 Unless you try Zakeke Interactive Product Designer for WooCommerce.
 
 
@@ -76,57 +71,26 @@ It’s built to eliminate manual work, **generate print-ready files automaticall
 
 Start a free trial today and see how these customizations look in your store:
 
-**Text customization**: customers can add and edit text to your products in real time — changing font, color, size, orientation, rotation, and even curving text to personalize freely.
-
-
-**Clipart, own images & premium photos**: customers can use preloaded artwork, upload their own images, or choose from over 140 million high-quality visuals from top creators to design unique products.
-
-
-**3D Product Configurator**: customers can build their own versions of your products by selecting parts, changing components, styles, and customizing materials and colors.
-
-
-**AI-Powered Configuration Generator**: let customers describe what they want and generate personalized product versions using AI — via text or voice.
-
-
-**Realtime 3D view**: show an interactive 3D model of the customized product that customers can zoom in on, rotate, and explore in real time.
-
-
-**Augmented Reality**: let customers view a 3D replica of your products in their own space using AR.
-
-**Virtual Try-On**: allow customers to virtually try on their dream products on any device before buying — no app required.
-
-**AI Agent Studio**: your creative team inside Zakeke. Generate product visuals at scale from a single image — with prompts, in just seconds.
-
-
-**Quote request**: customers can send you a request for a quote containing all the configuration and product data you need.
-
-
-**3D Digital Asset Manager**: manage, store, share, and collaborate on your 3D assets in one centralized cloud-based platform with unlimited storage.
-
-
-**Production-ready files for any method**: auto-generate PDF, PNG, SVG, DXF, and engraving files — with realistic previews and advanced formats like stacked or nested, no manual design work needed.
-
-
-**Full control of your pricing**: set fixed or percentage-based fees for each customization or configuration to increase your margins and AOV.
-
-
-**Works on any print-on-demand product**: simply define which product areas are customizable and you're ready to go.
-
-
-**Mobile ready**: the customizer interface is fully responsive and provides a smooth personalization experience across all screen sizes.
-
-
-**Global ready**: Zakeke supports over 50 currencies and automatically adapts to your store’s language.
-
-**Additional Sales Channels & Stores**: connect and manage multiple e-commerce channels and stores from your Zakeke account — all in one place.
-
-
-**WYSIWYG experience (What You See Is What You Get)**: customers always see exactly what they’ll get before buying — reducing complaints, refunds, and surprises.
-
-
-**Customer Support that’s always ready to help**: our friendly team is available from implementation to launch, and typically responds to all questions the same day.
-
-**3rd Party Integrations**: Connect tools like OrderDesk, Printful, Zapier, and more to automate and analyze.
+- Live product customizer: text, photo upload, colors, fonts, shapes, clipart, templates
+- Real-time realistic preview of every change, in 2D and interactive 3D
+- Print-ready files generated automatically for every order, at the correct size and resolution
+- Every production format: PDF, PDF layers, PNG, DXF, DXF HQ, BMP for engraving
+- No Photoshop, no email proofs: files delivered the moment the customer checks out
+- 3D product configurator: every variant, material and angle, no photoshoot needed
+- AI-generated 3D models built from a single product photo
+- Virtual Try-On and Augmented Reality previews in the browser, no app download
+- AI on-body and lifestyle previews: your design, on a real model, in seconds
+- AI product visuals for your catalog: staging, multi-product scenes, ads, image to video, upscale
+- Realistic preview of production effects: embroidery, stitching, engraving, print finishes
+- Dynamic pricing and configuration rules by option, area and material
+- No-code back office: a customizable product configured in minutes
+- Print on demand integrations: Printful, Printeers, CustomCat, with automatic order sync
+- Bulk order fulfilment in one click, zero manual processing
+- PrestaShop multistore ready: one account, shared products, assets and rules
+- Customization interface in 23+ languages
+- Sell custom products on Amazon, Etsy and other channels, plus full API access
+- Optimized for mobile and desktop
+- Free onboarding support and setup assistance
 
 
 

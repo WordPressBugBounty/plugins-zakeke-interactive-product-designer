@@ -111,6 +111,10 @@ class Zakeke_Cart {
 	}
 
 	public static function add_cart_item_data( $cart_item_meta, $product_id, $variation_id, $qty ) {
+		if ( ! apply_filters( 'zakeke_should_add_cart_item_data', true, $cart_item_meta ) ) {
+			return $cart_item_meta;
+		}
+
 		if ( self::is_zakeke_product() && ! isset( $cart_item_meta['zakeke_data'] ) ) {
 			$webservice = new Zakeke_Webservice();
 
