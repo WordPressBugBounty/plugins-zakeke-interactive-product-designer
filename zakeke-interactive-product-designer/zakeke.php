@@ -3,11 +3,11 @@
  * Plugin Name: Zakeke Interactive Product Designer
  * Plugin URI: https://www.zakeke.com/
  * Description: Innovative platform to let your customers to customize products in your e-store. Multi-language, mult-currency, 3D view and print-ready outputs.
- * Version: 4.3.9
+ * Version: 4.3.11
  * Author: Zakeke
  * Author URI: https://www.zakeke.com
  * Requires at least: 5.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * WC requires at least: 4.0
  * WC tested up to: 10.5
  *
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Zakeke' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.3.9';
+		public $version = '4.3.11';
 
 		/**
 		 * Zakeke api instance.
@@ -270,19 +270,61 @@ if ( ! class_exists( 'Zakeke' ) ) :
 			add_action( 'woocommerce_product_duplicate_before_save', array( $this, 'product_duplicate' ), 10, 2 );
 
 
-			add_filter('http_request_args', 'bal_http_request_args', 100, 1);
-			function bal_http_request_args($r)
-			{
-				$r['timeout'] = 15;
-				return $r;
+			add_filter( 'http_request_args', array( __CLASS__, 'http_request_args' ), 100, 2 );
+			add_action( 'http_api_curl', array( __CLASS__, 'http_api_curl' ), 100, 3 );
+		}
+
+		/**
+		 * Set the timeout for Zakeke API requests.
+		 *
+		 * Do not override a longer timeout explicitly requested by the caller.
+		 *
+		 * @param array  $args Request arguments.
+		 * @param string $url  Request URL.
+		 *
+		 * @return array
+		 */
+		public static function http_request_args( $args, $url ) {
+			if ( ! self::is_zakeke_api_request( $url )
+				|| ( isset( $args['timeout'] ) && $args['timeout'] > 15 )
+			) {
+				return $args;
 			}
 
-			add_action('http_api_curl', 'bal_http_api_curl', 100, 1);
-			function bal_http_api_curl($handle)
-			{
-				curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 15 );
-				curl_setopt( $handle, CURLOPT_TIMEOUT, 15 );
+			$args['timeout'] = 15;
+
+			return $args;
+		}
+
+		/**
+		 * Set cURL timeouts for Zakeke API requests.
+		 *
+		 * @param \CurlHandle $handle cURL handle.
+		 * @param array    $parsed_args Parsed request arguments.
+		 * @param string   $url         Request URL.
+		 *
+		 * @return void
+		 */
+		public static function http_api_curl( $handle, $parsed_args, $url ) {
+			if ( ! self::is_zakeke_api_request( $url )
+				|| ( isset( $parsed_args['timeout'] ) && $parsed_args['timeout'] > 15 )
+			) {
+				return;
 			}
+
+			curl_setopt( $handle, CURLOPT_CONNECTTIMEOUT, 15 );
+			curl_setopt( $handle, CURLOPT_TIMEOUT, 15 );
+		}
+
+		/**
+		 * Determine whether a request is going to the Zakeke API.
+		 *
+		 * @param string $url Request URL.
+		 *
+		 * @return bool
+		 */
+		private static function is_zakeke_api_request( $url ) {
+			return 0 === strpos( $url, trailingslashit( ZAKEKE_WEBSERVICE_URL ) );
 		}
 
 		/**
